@@ -1,5 +1,6 @@
 'use strict';
 /** @type {import('sequelize-cli').Migration} */
+const { User } = require("../models")
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Groups', {
@@ -33,9 +34,9 @@ module.exports = {
         type: Sequelize.STRING(2),
         allowNull: false,
       },
-      organizerid: {
+      organizerId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

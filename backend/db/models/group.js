@@ -79,9 +79,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(2),
       allowNull: false,
     },
-    organizerid: {
+    organizerId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      references: { model: "Users" }
     },
   }, {
     sequelize,
