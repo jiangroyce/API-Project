@@ -35,6 +35,11 @@ router.post("/", async (req, res, next) => {
     }
 });
 
+router.delete("/", (_req, res) => {
+    res.clearCookie("token");
+    return res.json({ message: "logged out successfully" });
+})
+
 module.exports = router;
 
 /*
