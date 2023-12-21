@@ -10,6 +10,8 @@ const router = express.Router();
 function _safeUser(user) {
     return {
         id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         username: user.username
     };
@@ -31,13 +33,19 @@ const validateSignup = [
         .exists()
         .isLength({ min: 6 })
         .withMessage("Password must be 6 characters or more"),
+    check("firstName")
+        .exists({ checkFalsy: true })
+        .withMessage("Please provide your first name"),
+    check("lastName")
+        .exists({ checkFalsy: true })
+        .withMessage("Please provide your last name"),
     handleValidationErrors
 ];
 
 router.post("/", validateSignup, async (req, res) => {
-    const { email, username, password } = req.body;
+    const { email, username, password, firstName, lastName } = req.body;
     const hashedPassword = bcrypt.hashSync(password);
-    const user = await User.create({ email, username, hashedPassword });
+    const user = await User.create({ email, username, hashedPassword, firstName, lastName });
 
     const safeUser = _safeUser(user);
 
