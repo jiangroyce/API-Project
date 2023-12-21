@@ -3,6 +3,9 @@ const { Op } = require("sequelize");
 const bcrypt = require("bcryptjs");
 const { setTokenCookie, restoreUser, requireAuth } = require("../../utils/auth.js");
 const { User } = require('../../db/models');
+// validations
+const { check } = require("express-validator");
+const { handleValidationErrors } = require("../../utils/validation.js");
 
 function _safeUser(user) {
     return {
@@ -12,10 +15,21 @@ function _safeUser(user) {
     };
 }
 
+const validateLogin = [
+    check("credential")
+        .exists({ checkFalsy: true})
+        .notEmpty()
+        .withMessage("Please provide a valid email or username"),
+    check("password")
+        .exists({ checkFalsy: true })
+        .withMessage("Please provide a password"),
+    handleValidationErrors
+];
+
 const router = express.Router();
 
 // Login
-router.post("/", async (req, res, next) => {
+router.post("/", validateLogin, async (req, res, next) => {
     const { credential, password } = req.body;
     console.log(credential);
     // find user
@@ -28,6 +42,7 @@ router.post("/", async (req, res, next) => {
     // if user not found
     if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
         const err = new Error("Login failed");
+        err.status = 401;
         err.title = "Login failed";
         err.errors = {
             credential: "Invalid credentials"
