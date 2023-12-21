@@ -4,8 +4,17 @@ const bcrypt = require("bcryptjs");
 const { setTokenCookie, restoreUser, requireAuth } = require("../../utils/auth.js");
 const { User } = require('../../db/models');
 
+function _safeUser(user) {
+    return {
+        id: user.id,
+        email: user.email,
+        username: user.username
+    };
+}
+
 const router = express.Router();
 
+// Login
 router.post("/", async (req, res, next) => {
     const { credential, password } = req.body;
     console.log(credential);
@@ -25,30 +34,25 @@ router.post("/", async (req, res, next) => {
         };
         next(err);
     } else {
-        const safeUser = {
-            id: user.id,
-            email: user.email,
-            username: user.username
-        };
+        const safeUser = _safeUser(user);
         setTokenCookie(res, safeUser);
         return res.json({user: safeUser});
     }
 });
 
+// Logout
 router.delete("/", (_req, res) => {
     res.clearCookie("token");
     return res.json({ message: "logged out successfully" });
-})
+});
+
+// Get Session
+router.get("/", (req, res) => {
+    const { user } = req;
+    if (user) {
+        const safeUser = _safeUser(user);
+        return res.json({ user: safeUser});
+    } else return res.json({ user: null });
+});
 
 module.exports = router;
-
-/*
-fetch('/api/session', {
-  method: 'POST',
-  headers: {
-    "Content-Type": "application/json",
-    "XSRF-TOKEN": `PBH5RdJE-_wYfy6Wb3l2d2vuomBFOAei42A4`
-  },
-  body: JSON.stringify({ credential: 'Demo-lition', password: 'password' })
-}).then(res => res.json()).then(data => console.log(data));
-*/
