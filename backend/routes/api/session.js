@@ -33,7 +33,6 @@ const router = express.Router();
 // Login
 router.post("/", validateLogin, async (req, res, next) => {
     const { credential, password } = req.body;
-    console.log(credential);
     // find user
     const user = await User.scope(null).findOne({
         where: {
