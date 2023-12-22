@@ -40,10 +40,12 @@ module.exports = {
       venueId: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        references: {model: "Venues"}
       },
       groupId: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        references: {model: "Groups"}
       },
       createdAt: {
         allowNull: false,

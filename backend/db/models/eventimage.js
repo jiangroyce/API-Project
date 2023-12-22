@@ -17,7 +17,9 @@ module.exports = (sequelize, DataTypes) => {
   EventImage.init({
     eventId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      references: {model: "Events"},
+      onDelete: "CASCADE"
     },
     url: {
       type: DataTypes.STRING,

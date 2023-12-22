@@ -59,10 +59,12 @@ module.exports = (sequelize, DataTypes) => {
     venueId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {model: "Venues"}
     },
     groupId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {model: "Groups"}
     },
   }, {
     sequelize,
