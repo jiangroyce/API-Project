@@ -49,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: false,
       validate: {
-        isAfter: new Date().toJSON().slice(0, 10)
+        isAfter: DataTypes.NOW
       }
     },
     endDate: {
@@ -64,14 +64,15 @@ module.exports = (sequelize, DataTypes) => {
     groupId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: {model: "Groups"}
+      references: {model: "Groups"},
+      onDelete: "CASCADE"
     },
   }, {
     sequelize,
     modelName: 'Event',
     validate: {
       endDateAfterStartDate() {
-        if (this.startDate.isAfter(this.end_date)) throw new Error("End date is less than start date")
+        if (this.startDate > this.endDate) throw new Error("End date is less than start date")
       }
     }
   });

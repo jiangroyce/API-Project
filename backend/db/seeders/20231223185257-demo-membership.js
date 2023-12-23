@@ -1,7 +1,7 @@
 'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
-const { Venue, Group } = require("../models");
+const { User, Group, Membership } = require("../models");
 let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;
@@ -17,25 +17,20 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
+    const person1 = await User.findOne({ where: { email: "demo@user.io" } });
+    const person2 = await User.findOne({ where: { email: "user1@user.io" } });
     const group1 = await Group.findOne({where: {name: "Los Angeles Construction"}});
     const group2 = await Group.findOne({where: {name: "Fake Users Anonymous"}});
-    await Venue.bulkCreate([
+    await Membership.bulkCreate([
       {
-        address: "111 Construction Way",
-        city: "Los Angeles",
-        state: "CA",
-        lat: 34.0549,
-        lng: 118.2426,
+        status:"co-host",
+        userId: person1.id,
         groupId: group1.id
       },
       {
-        address: "www.fakeusersanon.com",
-        city: "Online",
-        state: "Online",
-        lat: 0,
-        lng: 0,
+        userId: person2.id,
         groupId: group2.id
-      },
+      }
     ], { validate: true });
   },
 
@@ -46,10 +41,5 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    options.tableName = "Venues";
-    const Op = Sequelize.Op;
-    return queryInterface.bulkDelete(options, {
-      address: { [Op.in]: ["111 Construction Way", "www.fakeusersanon.com"]}
-    });
   }
 };

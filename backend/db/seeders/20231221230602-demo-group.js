@@ -1,7 +1,7 @@
 'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
-const { Group } = require('../models');
+const { Group, User } = require('../models');
 let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;
@@ -18,6 +18,8 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
+   const person1 = await User.findOne({ where: { email: "demo@user.io" } });
+   const person2 = await User.findOne({ where: { email: "user1@user.io" } });
    await Group.bulkCreate([
     {
         name: "Los Angeles Construction",
@@ -26,7 +28,7 @@ module.exports = {
         private: true,
         city: "Los Angeles",
         state: "CA",
-        organizerId: 1
+        organizerId: person1.id
     },
     {
         name: "Fake Users Anonymous",
@@ -35,7 +37,7 @@ module.exports = {
         private: true,
         city: "Los Angeles",
         state: "CA",
-        organizerId: 2
+        organizerId: person2.id
     }], { validate: true })
   },
 
