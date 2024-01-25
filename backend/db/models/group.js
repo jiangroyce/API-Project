@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
       Group.hasMany(models.Venue, { foreignKey: "groupId" });
       Group.belongsToMany(models.User, {
         through: models.Membership,
-        foreignKey: "groupId",
+        foreignKey: "groupId", // as Membership & include, migrations foreign keys cascade, hasManys cascade
         otherKey: "userId"
       });
       Group.hasMany(models.Event, { foreignKey: "groupId" });
@@ -87,6 +87,16 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Group',
+    // scopes: {
+    //   getGroups: {
+    //     include: [
+    //       {
+    //         model: User,
+    //         attributes
+    //       }
+    //     ]
+    //   }
+    // }
   });
   return Group;
 };
