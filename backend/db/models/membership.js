@@ -16,19 +16,21 @@ module.exports = (sequelize, DataTypes) => {
   Membership.init({
     status: {
       type: DataTypes.ENUM("pending", "member", "co-host"),
-      defaultValue: "pending"
+      defaultValue: "co-host"
     },
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {model: "Users"},
-      onDelete: "CASCADE"
+      onDelete: "CASCADE",
+      hooks: true
     },
     groupId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {model: "Groups"},
-      onDelete: "CASCADE"
+      onDelete: "CASCADE",
+      hooks: true
     },
   }, {
     sequelize,

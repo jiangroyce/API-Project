@@ -45,28 +45,59 @@ function _groupNotFound(res) {
     res.statusCode = 404;
     res.json({message: "Group couldn't be found"});
 };
-
+function getNumMembers(group) {
+    return group.Members.filter(user => user.Membership.status != "pending").length;
+};
+function getPreviewImage(group) {
+    if (group.GroupImages.length) return group.GroupImages[0].preview ? group.GroupImages[0].url : false;
+    else return false;
+};
+function formatGroups(groups) {
+    groups.forEach((group) => {
+        let newGroup = group.dataValues;
+        newGroup.numMembers = getNumMembers(newGroup);
+        newGroup.previewImage = getPreviewImage(newGroup);
+        delete newGroup.Members;
+        delete newGroup.GroupImages;
+        group.dataValues = newGroup
+    });
+    return groups;
+};
+function _authorizationError(res) {
+    res.statusCode = 403;
+    res.json({ message: "Forbidden" });
+}
+function isOrganizer(user, group) {
+    return group.organizerId == user.id;
+}
+function isPartOf(user, group) {
+    let members = group.Members.map(member => member.id)
+    return members.includes(user.id);
+}
 router.get("/", async (req, res) => {
     const groups = await Group.findAll();
-    res.json(groups); // add numMumbers and previewImage
+    res.json({"Groups": formatGroups(groups)}); // add numMumbers and previewImage
 });
 
 router.get("/current", requireAuth, async (req, res) => {
     const { user } = req;
     const currentUser = await User.findByPk(user.id, { include: {
-        model: Group,
+        association: "Members",
         through: {
             attributes: []
         }
      }});
-    res.json(currentUser.Groups)   // add numMembers add previewImage
+    res.json({"Groups": formatGroups(currentUser.Members)});  // add numMembers add previewImage
 });
 
 router.get("/:groupId", async (req, res) => {
     const { groupId } = req.params;
-    const group = await Group.findByPk(groupId, { include: [
+    const group = await Group.scope(null).findByPk(groupId, { include: [
         {
-            model: GroupImage,
+            association: "Members"
+        },
+        {
+            association: "GroupImages",
             attributes: {
                 exclude: ["createdAt", "updatedAt", "groupId"]
             }
@@ -87,12 +118,38 @@ router.get("/:groupId", async (req, res) => {
     if (!group) {
         return _groupNotFound(res);
     }
-    else res.json(group);
+    else {
+        group.dataValues.numMembers = getNumMembers(group);
+        delete group.dataValues.Members;
+        res.json(group);
+    }
 });
 
-router.post("/", [requireAuth, handleValidationErrors], async (req, res) => {
+const validateCreateGroup = [
+    check('name')
+        .isLength({ min: 1, max: 60 })
+        .withMessage('Name must be 60 characters or less'),
+    check('about')
+        .isLength({ min: 50 })
+        .withMessage('About must be 50 characters or more'),
+    check('type')
+        .isIn(["Online", "In person"])
+        .withMessage("Type must be 'Online' or 'In person'"),
+    check('city')
+        .exists({ checkFalsy: true })
+        .withMessage("City is required"),
+    check('state')
+        .exists({ checkFalsy: true })
+        .withMessage("State is required"),
+    handleValidationErrors
+]
+
+// Create a Group
+router.post("/", [requireAuth, validateCreateGroup], async (req, res) => {
+    const { user } = req;
     const { name, about, type, private, city, state } = req.body;
-    const newGroup = await Group.create( {
+    const newGroup = await user.createMember( {
+        organizerId: user.id,
         name,
         about,
         type,
@@ -101,6 +158,10 @@ router.post("/", [requireAuth, handleValidationErrors], async (req, res) => {
         state
     })
     if (newGroup) {
+        // newGroup.createMember({
+        //     status: "co-host",
+        //     userId: user.id
+        // });
         res.statusCode = 201;
         res.json(newGroup);
     };
@@ -108,7 +169,7 @@ router.post("/", [requireAuth, handleValidationErrors], async (req, res) => {
 
 // Add image to group based on id
 router.post("/:groupId/images", [requireAuth, handleValidationErrors], async (req, res) => {
-    // add authorization for organizer
+    const { user } = req;
     const { groupId } = req.params;
     const { url, preview } = req.body;
     const group = await Group.findByPk(groupId);
@@ -116,37 +177,69 @@ router.post("/:groupId/images", [requireAuth, handleValidationErrors], async (re
         return _groupNotFound(res);
     }
     else {
-        const newImage = await group.createGroupImage({
-            url,
-            preview
+        console.log(isOrganizer(user, group))
+        if (isOrganizer(user, group)) {
+            const newImage = await group.createGroupImage({
+                url,
+                preview
         });
+        let resBody = { id : newImage.id, url, preview }
+        res.json(resBody);
+        }
+        else {
+            return _authorizationError(res);
+        }
     }
 });
 
 // edit a group
 router.put("/:groupId", [requireAuth, handleValidationErrors], async (req, res) => {
     // add authorization: group must belong to current user
+    const { user } = req;
     const { groupId } = req.params;
     const { name, about, type, private, city, state } = req.body;
     const group = await Group.findByPk(groupId);
     if (!group) {
         return _groupNotFound(res);
     } else {
-        // update stuff
+        if (isOrganizer(user, group, res)) {
+            if (name) group.name = name;
+            if (about) group.about = about;
+            if (type) group.type = type;
+            if (private) group.private = private;
+            if (city) group.city = city;
+            if (state) group.state = state;
+            await group.save({validate: true});
+            res.statusCode = 201;
+            res.json(formatGroups([group]));
+        }
+        else return _authorizationError(res);
     }
 });
 
+// Delete a group
 router.delete("/:groupId", requireAuth, async (req, res) => {
     // add authorization: group must belong to current user
+    const { user } = req;
     const group = await Group.findByPk(req.params.groupId);
     if (!group) {
         return _groupNotFound(res);
     } else {
-        group.destroy();
-        res.json({ message: "Successfully deleted"});
+        if (isOrganizer(user, group, res)) {
+            group.destroy();
+            res.json({ message: "Successfully deleted"});
+        }
+        else return _authorizationError(res);
     }
 });
 
+// get Memberships
+router.get("/:groupId/members", async (req, res) => {
+    const group = await Group.findByPk(req.params.groupId);
+    res.json(group.Members);
+});
+
+// get Venues for groupId
 router.get("/:groupId/venues", requireAuth, async (req, res) => {
     // add authorization: currentUser must be organizer or co-host of group
     const group = await Group.findByPk(req.params.groupId);
@@ -187,4 +280,14 @@ test get /groupid/venues
 
 DRY up group = await Group.findByPk(...)
 
+Issues:
+Right now the seeder undos are dynamically deleting based on name I seeded, if changed name will error?
+
+Authorization: group belongs to current user doesn't make sense, only organizer should be able to update/delete
+
+Membership:
+
+
+Undo Seed:
+cannot undo user seed if created a new group
 */

@@ -19,7 +19,7 @@ function _safeUser(user) {
 
 const validateSignup = [
     check('email')
-        .exists({ checkFalse: true })
+        .exists({ checkFalsy: true })
         .isEmail()
         .withMessage('Please provide a valid email'),
     check("username")

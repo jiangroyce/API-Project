@@ -39,37 +39,49 @@ module.exports = (sequelize, DataTypes) => {
       Group.belongsToMany(models.User, {
         through: models.Membership,
         foreignKey: "groupId", // as Membership & include, migrations foreign keys cascade, hasManys cascade
-        otherKey: "userId"
+        otherKey: "userId",
+        as: "Members"
       });
       Group.hasMany(models.Event, { foreignKey: "groupId" });
-      Group.hasMany(models.GroupImage, { foreignKey: "groupId" });
+      Group.hasMany(models.GroupImage, { foreignKey: "groupId", as: "GroupImages" });
     }
   }
   Group.init({
     organizerId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: "Users" }
+      references: { model: "Users" },
+      onDelete: "CASCADE",
+      hooks: true
     },
     name: {
       type: DataTypes.STRING(60),
       allowNull: false,
       validate: {
-        len: [1, 60]
+        len: {
+          args: [1, 60],
+          msg: "Name must be 60 characters or less"
+        }
       }
     },
     about: {
       type: DataTypes.TEXT,
       allowNull: false,
       validate: {
-          min: 50
+          min: {
+            args: 50,
+            msg: "About must be 50 characters or more"
+          }
       }
     },
     type: {
       type: DataTypes.ENUM("Online", "In person"),
       allowNull: false,
       validate: {
-        isIn: [["Online", "In person"]]
+        isIn: {
+          args: [["Online", "In person"]],
+          msg: "Type must be 'Online' or 'In person'"
+        }
       }
     },
     private: {
@@ -87,6 +99,16 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Group',
+    defaultScope: {
+        include: [
+            {
+                association: "Members"
+            },
+            {
+                association: "GroupImages"
+            }
+        ]
+    }
     // scopes: {
     //   getGroups: {
     //     include: [

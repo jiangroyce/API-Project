@@ -19,7 +19,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {model: "Events"},
-      onDelete: "CASCADE"
+      onDelete: "CASCADE",
+      hooks: true
     },
     url: {
       type: DataTypes.STRING,
