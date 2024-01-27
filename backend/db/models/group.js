@@ -34,11 +34,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Group.belongsTo(models.User, { foreignKey: "organizerId" });
+      Group.belongsTo(models.User, { foreignKey: "organizerId", as: "Organizer" });
       Group.hasMany(models.Venue, { foreignKey: "groupId" });
       Group.belongsToMany(models.User, {
         through: models.Membership,
-        foreignKey: "groupId",
+        foreignKey: "groupId", // as Membership & include, migrations foreign keys cascade, hasManys cascade
         otherKey: "userId"
       });
       Group.hasMany(models.Event, { foreignKey: "groupId" });
@@ -46,6 +46,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Group.init({
+    organizerId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: { model: "Users" }
+    },
     name: {
       type: DataTypes.STRING(60),
       allowNull: false,
@@ -79,14 +84,19 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(2),
       allowNull: false,
     },
-    organizerId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: { model: "Users" }
-    },
   }, {
     sequelize,
     modelName: 'Group',
+    // scopes: {
+    //   getGroups: {
+    //     include: [
+    //       {
+    //         model: User,
+    //         attributes
+    //       }
+    //     ]
+    //   }
+    // }
   });
   return Group;
 };
