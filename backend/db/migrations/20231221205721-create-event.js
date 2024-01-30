@@ -43,9 +43,9 @@ module.exports = {
       },
       venueId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: { model: "Venues" },
-        onDelete: "CASCADE",
+        onDelete: "SET NULL",
         hooks: true
       },
       groupId: {

@@ -26,8 +26,8 @@ module.exports = {
         type: "In person",
         capacity: 35,
         price: 5.99,
-        startDate: new Date("2024-01-01"),
-        endDate: new Date("2024-01-02"),
+        startDate: new Date("2025-01-01"),
+        endDate: new Date("2025-01-02"),
         venueId: venue1.id,
         groupId: venue1.groupId
       },
@@ -37,8 +37,8 @@ module.exports = {
         type: "Online",
         capacity: 40,
         price: 4.99,
-        startDate: new Date("2024-01-01"),
-        endDate: new Date("2024-01-01"),
+        startDate: new Date("2025-01-01"),
+        endDate: new Date("2025-01-01"),
         venueId: venue2.id,
         groupId: venue2.groupId
       }], { validate: true })

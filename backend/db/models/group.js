@@ -114,17 +114,7 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     sequelize,
-    modelName: 'Group',
-    defaultScope: {
-        include: [
-            {
-                association: "Members"
-            },
-            {
-                association: "GroupImages"
-            }
-        ]
-    }
+    modelName: 'Group'
     // scopes: {
     //   getGroups: {
     //     include: [

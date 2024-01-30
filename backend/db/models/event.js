@@ -2,6 +2,7 @@
 const {
   Model, Sequelize
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Event extends Model {
     /**
@@ -11,14 +12,24 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Event.belongsTo(models.Group, { foreignKey:"groupId" });
-      Event.belongsTo(models.Venue, { foreignKey:"venueId" });
+      Event.belongsTo(models.Group, {
+        foreignKey:"groupId"
+      });
+      Event.belongsTo(models.Venue, { foreignKey:"venueId", as: "Venue" });
       Event.belongsToMany(models.User, {
         through: models.Attendance,
+        attributes: {
+            exclude: ["createdAt", "updatedAt"]
+        },
         foreignKey: "eventId",
-        otherKey: "userId"
+        otherKey: "userId",
+        as: "Attendees"
       });
-      Event.hasMany(models.EventImage, { foreignKey: "eventId" });
+      Event.hasMany(models.EventImage, {
+        foreignKey: "eventId",
+        onDelete: "CASCADE",
+        hooks: true
+      });
     }
   }
   Event.init({
@@ -40,17 +51,26 @@ module.exports = (sequelize, DataTypes) => {
     capacity: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      validate: {
+        isInt: {
+          args: true,
+          msg: "Capacity must be an integer"
+        }
+      }
     },
     price: {
       type: DataTypes.DECIMAL,
       allowNull: false,
+      validate: {
+        isFloat: {
+          args: true,
+          msg: "Price is invalid"
+        }
+      }
     },
     startDate: {
       type: DataTypes.DATE,
-      allowNull: false,
-      validate: {
-        isAfter: DataTypes.NOW
-      }
+      allowNull: false
     },
     endDate: {
       type: DataTypes.DATE,
@@ -58,13 +78,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     venueId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {model: "Venues"}
+      allowNull: true,
+      references: { model: "Venues" }
     },
     groupId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: {model: "Groups"},
+      references: { model: "Groups" },
       onDelete: "CASCADE",
       hooks: true
     },
@@ -72,8 +92,22 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Event',
     validate: {
+      capacityValid() {
+        if (this.capacity < 0) throw new Error("Capacity is invalid");
+      },
+      priceValid() {
+        if (this.price < 0) throw new Error("Price is invalid");
+      },
+      startDateinFuture() {
+        if (this.startDate < Date.now()) throw new Error("Start date must be in the future")
+      },
       endDateAfterStartDate() {
         if (this.startDate > this.endDate) throw new Error("End date is less than start date")
+      }
+    },
+    defaultScope: {
+      attributes: {
+        exclude: ["createdAt", "updatedAt"]
       }
     }
   });
