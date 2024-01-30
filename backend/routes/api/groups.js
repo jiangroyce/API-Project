@@ -226,7 +226,7 @@ router.delete("/:groupId", requireAuth, async (req, res) => {
         return _groupNotFound(res);
     } else {
         if (isOrganizer(user, group, res)) {
-            group.destroy();
+            await group.destroy();
             res.json({ message: "Successfully deleted"});
         }
         else return _authorizationError(res);
@@ -269,12 +269,6 @@ module.exports = router;
 /*
 
 Todo:
-make require authorization for organizer
-make require authorization for group belongTo current user
-test get /
-test post /
-put /:groupId
-test delete /:groupId
 test get /groupid/venues
 
 
@@ -287,7 +281,4 @@ Authorization: group belongs to current user doesn't make sense, only organizer 
 
 Membership:
 
-
-Undo Seed:
-cannot undo user seed if created a new group
 */

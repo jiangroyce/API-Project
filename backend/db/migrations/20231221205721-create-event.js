@@ -44,12 +44,16 @@ module.exports = {
       venueId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {model: "Venues"}
+        references: { model: "Venues" },
+        onDelete: "CASCADE",
+        hooks: true
       },
       groupId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {model: "Groups"}
+        references: { model: "Groups" },
+        onDelete: "CASCADE",
+        hooks: true
       },
       createdAt: {
         allowNull: false,

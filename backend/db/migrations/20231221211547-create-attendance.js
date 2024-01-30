@@ -16,14 +16,16 @@ module.exports = {
       eventId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {model: "Events"},
-        onDelete: "CASCADE"
+        references: { model: "Events" },
+        onDelete: "CASCADE",
+        hooks: true
       },
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {model: "Users"},
-        onDelete: "CASCADE"
+        references: { model: "Users" },
+        onDelete: "CASCADE",
+        hooks: true
       },
       status: {
         type: Sequelize.ENUM("pending", "attending", "waitlist"),
