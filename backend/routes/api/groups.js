@@ -6,41 +6,6 @@ const { handleValidationErrors } = require('../../utils/validation');
 
 const router = express.Router();
 
-// function _safeUser(user) {
-//     return {
-//         id: user.id,
-//         firstName: user.firstName,
-//         lastName: user.lastName,
-//         email: user.email,
-//         username: user.username
-//     };
-// }
-
-// const validateSignup = [
-//     check('email')
-//         .exists({ checkFalse: true })
-//         .isEmail()
-//         .withMessage('Please provide a valid email'),
-//     check("username")
-//         .exists({ checkFalsy: true })
-//         .isLength({ min: 4 })
-//         .withMessage("Please provide a username with at least 4 characters"),
-//     check("username")
-//         .not().isEmail()
-//         .withMessage("Username cannot be an email"),
-//     check("password")
-//         .exists()
-//         .isLength({ min: 6 })
-//         .withMessage("Password must be 6 characters or more"),
-//     check("firstName")
-//         .exists({ checkFalsy: true })
-//         .withMessage("Please provide your first name"),
-//     check("lastName")
-//         .exists({ checkFalsy: true })
-//         .withMessage("Please provide your last name"),
-//     handleValidationErrors
-// ];
-
 function _groupNotFound(res) {
     res.statusCode = 404;
     res.json({message: "Group couldn't be found"});
@@ -271,11 +236,9 @@ module.exports = router;
 Todo:
 test get /groupid/venues
 
-
 DRY up group = await Group.findByPk(...)
 
 Issues:
-Right now the seeder undos are dynamically deleting based on name I seeded, if changed name will error?
 
 Authorization: group belongs to current user doesn't make sense, only organizer should be able to update/delete
 
