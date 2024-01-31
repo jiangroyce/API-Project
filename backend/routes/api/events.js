@@ -1,49 +1,17 @@
 const express = require('express');
-const { User, Group, GroupImage, Venue, Event, EventImage, Attendance } = require('../../db/models');
-const { check } = require('express-validator');
-const { setTokenCookie, restoreUser, requireAuth } = require("../../utils/auth.js");
-const { handleValidationErrors } = require('../../utils/validation');
+const { User, Venue, Event, Attendance } = require('../../db/models');
+const { requireAuth } = require("../../utils/auth.js");
+const { handleValidationErrors, validateEditAttendance, validateEditEvent, validateQueryParams } = require('../../utils/validation.js');
 const { _authorizationError, isOrganizer, isCoHost, isMember, isAttending } = require('../../utils/authorization.js');
+const { _userNotFound, _eventNotFound, _attendanceNotFound } = require("../../utils/errors.js");
+const { getAttendees, formatEvents } = require('../../utils/formatting.js');
+const { Op } = require("sequelize");
 
 const router = express.Router();
 
-// Helper Functions:
-function _eventNotFound(res) {
-    res.statusCode = 404;
-    res.json({message: "Event couldn't be found"});
-}
-function _userNotFound(res) {
-    res.statusCode = 404;
-    res.json({message: "User couldn't be found"});
-}
-function _attendanceNotFound(res) {
-    res.statusCode = 404;
-    return res.json({ "message": "Attendance between the user and the event does not exist" })
-}
-// Event Formatting Functions
-function getAttendees(event) {
-    return event.Attendees.filter(user => user.Attendance.status == "attending").length;
-};
-function getPreviewImage(event) {
-    if (event.EventImages.length) return event.EventImages[0].preview ? event.EventImages[0].url : false;
-    else return false;
-};
-function formatEvents(events) {
-    events.forEach((event) => {
-        let newEvent = event.dataValues;
-        newEvent.numAttending = getAttendees(newEvent);
-        newEvent.previewImage = getPreviewImage(newEvent);
-        delete newEvent.Attendees;
-        delete newEvent.EventImages;
-        event.dataValues = newEvent
-    });
-    return events;
-};
-// Endpoints:
-
 // Get All Events
-router.get("/", async (req, res) => {
-    const events = await Event.findAll({
+router.get("/", validateQueryParams, async (req, res, next) => {
+    let query = {
         attributes: {
             exclude: ["description", "capacity", "price"]
         },
@@ -61,8 +29,29 @@ router.get("/", async (req, res) => {
         {
           association: "Venue",
           attributes: ["id", "city", "state"],
-        }
-    ]});
+        }],
+        where: {}
+    };
+    // page and size options
+    const page = req.query.page === undefined ? 1 : parseInt(req.query.page);
+    const size = req.query.size === undefined ? 20 : parseInt(req.query.size);
+    if (page >= 1 && size >= 1) {
+        query.limit = Math.min(size, 20)
+        query.offset = Math.min(size, 20) * (Math.min(page, 10) - 1);
+    };
+
+    // name, type, startDate
+    const { name, type, startDate } = req.query;
+    if (name) query.where.name = { [Op.like]: "%"+name+"%" };
+    if (type) query.where.type = { [Op.eq]: type };
+    if (startDate) {
+        let prevDate = new Date(startDate.slice(0, 10));
+        prevDate.setDate(prevDate.getDate() - 1);
+        let postDate = new Date(startDate.slice(0, 10));
+        postDate.setDate(postDate.getDate() + 1);
+        query.where.startDate = { [Op.between]: [prevDate, postDate] };
+    }
+    const events = await Event.findAll(query);
     res.json({ "Events": formatEvents(events) });
 });
 
@@ -138,7 +127,7 @@ router.post("/:eventId/images", [requireAuth, handleValidationErrors], async (re
 });
 
 // Edit Event by eventId
-router.put("/:eventId", requireAuth, async (req, res) => {
+router.put("/:eventId", [requireAuth, validateEditEvent], async (req, res) => {
     const { user } = req;
     const { eventId } = req.params;
     const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
@@ -290,15 +279,6 @@ router.post("/:eventId/attendance", requireAuth, async (req, res) => {
 });
 
 // Change status of attendance by eventId
-const validateEditAttendance = [
-    check('userId')
-        .isInt({ min: 1 })
-        .withMessage("Invalid userId"),
-    check('status')
-        .isIn(["pending", "attending", "waitlist"])
-        .withMessage("Invalid status"),
-    handleValidationErrors
-];
 router.put("/:eventId/attendance", [requireAuth, validateEditAttendance], async (req, res) => {
     const { user } = req;
     const { eventId } = req.params;
@@ -379,7 +359,7 @@ router.delete("/:eventId/attendance/:userId", requireAuth, async (req, res) => {
     });
     if (!attendance) return _attendanceNotFound(res);
     else {
-        if (isCoHost(user, event.Group) || user.id == attendance.userId ) {
+        if (isOrganizer(user, event.Group) || user.id == attendance.userId ) {
             await attendance.destroy();
             res.json({ "message": "Successfully deleted attendance from event" });
         }

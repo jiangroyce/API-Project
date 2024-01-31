@@ -12,7 +12,7 @@ function isCoHost(user, group) {
     return coHosts.includes(user.id);
 }
 function isMember(user, group) {
-    let members = group.Members.map(member => member.id)
+    let members = group.Members.filter(member => member.Membership.status != "pending").map(member => member.id)
     return members.includes(user.id);
 }
 function isAttending(user, event) {
