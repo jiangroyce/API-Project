@@ -19,8 +19,8 @@ module.exports = {
     */
     const person1 = await User.findOne({ where: { email: "demo@user.io" } });
     const person2 = await User.findOne({ where: { email: "user1@user.io" } });
-    const group1 = await Group.findOne({where: {name: "Los Angeles Construction"}});
-    const group2 = await Group.findOne({where: {name: "Fake Users Anonymous"}});
+    const group1 = await Group.findOne({ where: { name: "Los Angeles Construction" } });
+    const group2 = await Group.findOne({ where: { name: "Fake Users Anonymous" } });
     await Membership.bulkCreate([
       {
         status:"co-host",
