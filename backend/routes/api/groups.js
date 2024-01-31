@@ -526,17 +526,20 @@ router.delete("/:groupId/membership/:memberId", requireAuth, async (req, res) =>
 
 module.exports = router;
 
-    /*
+/*
 
-    Todo:
+Todo:
 
-    DRY up group = await Group.findByPk(...)
+DRY:
+group = await Group.findByPk(...) and event = await...
+Make routers for membership and attendance
+put all errors into utils/errors.js
 
-    Issues:
+Issues:
 
-    Authorization: group belongs to current user doesn't make sense, only organizer should be able to update/delete
+Authorization: group belongs to current user doesn't make sense, only organizer should be able to update/delete
 
-    Membership:
-    if organizer deletes himself what to do
+Membership:
+if organizer deletes himself what to do (make new cohost)
 
-    */
+*/
