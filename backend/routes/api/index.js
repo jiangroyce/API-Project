@@ -3,7 +3,7 @@ const sessionRouter = require("./session.js");
 const usersRouter = require("./users.js");
 const groupsRouter = require("./groups.js");
 const venuesRouter = require("./venues.js");
-const eventsRouter = require("./events.js")
+const eventsRouter = require("./events.js");
 const { setTokenCookie, restoreUser, requireAuth } = require("../../utils/auth.js");
 const { User } = require("../../db/models");
 router.use(restoreUser);

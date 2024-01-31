@@ -5,6 +5,7 @@ const { setTokenCookie, restoreUser, requireAuth } = require("../../utils/auth.j
 const { handleValidationErrors } = require('../../utils/validation.js');
 const { _authorizationError, isOrganizer, isCoHost, isMember, isAttending } = require('../../utils/authorization.js');
 const { Op } = require("sequelize");
+
 const router = express.Router();
 
 // Helper Functions:
