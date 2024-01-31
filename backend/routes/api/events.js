@@ -1,9 +1,10 @@
 const express = require('express');
 const { User, Group, GroupImage, Venue, Event, EventImage, Attendance } = require('../../db/models');
-const { check } = require('express-validator');
+const { check, query } = require('express-validator');
 const { setTokenCookie, restoreUser, requireAuth } = require("../../utils/auth.js");
 const { handleValidationErrors } = require('../../utils/validation');
 const { _authorizationError, isOrganizer, isCoHost, isMember, isAttending } = require('../../utils/authorization.js');
+const { Op } = require("sequelize");
 
 const router = express.Router();
 
@@ -42,8 +43,8 @@ function formatEvents(events) {
 // Endpoints:
 
 // Get All Events
-router.get("/", async (req, res) => {
-    const events = await Event.findAll({
+router.get("/", async (req, res, next) => {
+    let query = {
         attributes: {
             exclude: ["description", "capacity", "price"]
         },
@@ -61,9 +62,52 @@ router.get("/", async (req, res) => {
         {
           association: "Venue",
           attributes: ["id", "city", "state"],
-        }
-    ]});
-    res.json({ "Events": formatEvents(events) });
+        }],
+        where: {}
+    };
+    let err = new Error("Bad Request")
+    let errors = {};
+    // page and size options
+    let { page, size } = req.query;
+    // Page
+    if (page === undefined) page = 1;
+    else if (isNaN(parseInt(page)) || parseInt(page) == 0) errors.page = "Page must be greater than or equal to 1";
+    else page = parseInt(page);
+    // Size
+    if (size === undefined) size = 20;
+    else if (isNaN(parseInt(size)) || parseInt(size) == 0) errors.size = "Size must be greater than or equal to 1";
+    else size = parseInt(size);
+    if (page >= 1 && size >= 1) {
+        query.limit = Math.min(size, 20)
+        query.offset = Math.min(size, 20) * (Math.min(page, 10) - 1);
+    };
+
+    // name, type, startDate
+    const { name, type, startDate } = req.query;
+    if (name) {
+        if (typeof name !== "string") errors.name = "Name must be a string"
+        query.where.name = { [Op.like]: "%"+name+"%" };
+    }
+    if (type) {
+        if (!["Online", "In person"].includes(type)) errors.type = "Type must be 'Online' or 'In person'"
+        query.where.type = { [Op.like]: "%"+type+"%" };
+    }
+    if (startDate) {
+        if (startDate.length !== 19 || !startDate.match(/^\d\d\d\d-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01]) (00|[0-9]|1[0-9]|2[0-3]):([0-9]|[0-5][0-9]):([0-9]|[0-5][0-9])$/g)) errors.startDate = "Start date must be a valid datetime in YYYY-MM-DD HH:MM:SS format"
+        let prevDate = new Date(startDate.slice(0, 10));
+        prevDate.setDate(prevDate.getDate() - 1);
+        let postDate = new Date(startDate.slice(0, 10));
+        postDate.setDate(postDate.getDate() + 1);
+        query.where.startDate = { [Op.between]: [prevDate, postDate] };
+    }
+    if (JSON.stringify(errors) !== '{}') {
+        err.errors = errors;
+        next(err);
+    }
+    else {
+        const events = await Event.findAll(query);
+        res.json({ "Events": formatEvents(events) });
+    }
 });
 
 // Get all Events by groupId in Groups

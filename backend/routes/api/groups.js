@@ -314,23 +314,23 @@ const validateCreateEvent = [
     .withMessage("Name must be at least 5 characters"),
     check('type')
     .isIn(["Online", "In person"])
-    .withMessage("Type must be Online or In person"),
+    .withMessage("Type must be 'Online' or 'In person'"),
     check('capacity')
     .isInt({ min: 0 })
     .withMessage("Capacity must be an integer"),
     check('price')
         .isFloat({ min: 0 })
         .withMessage("Price is invalid"),
-        check('description')
+    check('description')
         .exists({ checkFalsy: true })
         .withMessage("Description is required"),
-        check('startDate')
+    check('startDate')
         .isLength({ min: 18 })
         .withMessage("Start date must be a valid date in YYYY-MM-DD HH:MM:SS format"),
-        check('endDate')
+    check('endDate')
         .isLength({ min: 18 })
         .withMessage("End date must be a valid date in YYYY-MM-DD HH:MM:SS format"),
-        handleValidationErrors
+    handleValidationErrors
 ]
 
 // Create Event based on groupId
@@ -532,7 +532,6 @@ Todo:
 
 DRY:
 group = await Group.findByPk(...) and event = await...
-Make routers for membership and attendance
 put all errors into utils/errors.js
 
 Issues:
@@ -540,6 +539,6 @@ Issues:
 Authorization: group belongs to current user doesn't make sense, only organizer should be able to update/delete
 
 Membership:
-if organizer deletes himself what to do (make new cohost)
+if organizer deletes himself what to do (make new cohost) => pass off to next member
 
 */
