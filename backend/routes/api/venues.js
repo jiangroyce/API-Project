@@ -35,12 +35,3 @@ router.put("/:venueId", [requireAuth, validateEditVenue], async (req, res) => {
 
 
 module.exports = router;
-
-/*
-Todo:
-make custom messages for validation errors in venue.js
-
-Issues:
-Sequelize Validator showing error 500 insteat of 400
-
-*/

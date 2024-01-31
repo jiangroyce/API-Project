@@ -4,7 +4,7 @@ const { requireAuth } = require("../../utils/auth.js");
 const { handleValidationErrors, validateCreateGroup, validateEditGroup, validateCreateVenue, validateCreateEvent, validateEditMembership } = require('../../utils/validation.js');
 const { _authorizationError, isOrganizer, isCoHost } = require('../../utils/authorization.js');
 const { getNumMembers, formatGroups, formatEvents } = require('../../utils/formatting.js');
-const { _groupNotFound, _userNotFound, _membershipNotFound } = require("../../utils/errors.js");
+const { _groupNotFound, _userNotFound, _membershipNotFound, _venueNotFound } = require("../../utils/errors.js");
 
 const router = express.Router();
 
@@ -93,10 +93,6 @@ router.post("/", [requireAuth, validateCreateGroup], async (req, res) => {
         state
     })
     if (newGroup) {
-        // newGroup.createMember({
-        //     status: "co-host",
-        //     userId: user.id
-        // });
         res.statusCode = 201;
         res.json(newGroup);
     };
@@ -253,10 +249,7 @@ router.post("/:groupId/events", [requireAuth, validateCreateEvent], async (req, 
         // check if venue exists
         if (parseInt(venueId)) {
             const venue = await Venue.findByPk(venueId);
-            if (!venue) {
-                res.statusCode = 404;
-                return res.json({ message: "Venue couldn't be found" });
-            }
+            if (!venue) return _venueNotFound(res);
         }
         if (isOrganizer(user, group) || isCoHost(user, group)) {
             const newEvent = await group.createEvent({
@@ -425,20 +418,3 @@ router.delete("/:groupId/membership/:memberId", requireAuth, async (req, res) =>
 });
 
 module.exports = router;
-
-/*
-
-Todo:
-
-DRY:
-group = await Group.findByPk(...) and event = await...
-put all errors into utils/errors.js
-
-Issues:
-
-Authorization: group belongs to current user doesn't make sense, only organizer should be able to update/delete
-
-Membership:
-if organizer deletes himself what to do (make new cohost) => pass off to next member
-
-*/
