@@ -31,11 +31,11 @@ module.exports = {
         allowNull: false,
       },
       city: {
-        type: Sequelize.STRING(30),
+        type: Sequelize.STRING,
         allowNull: false,
       },
       state: {
-        type: Sequelize.STRING(2),
+        type: Sequelize.STRING,
         allowNull: false,
       },
       organizerId: {

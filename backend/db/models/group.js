@@ -108,11 +108,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     city: {
-      type: DataTypes.STRING(30),
+      type: DataTypes.STRING,
       allowNull: false,
     },
     state: {
-      type: DataTypes.STRING(2),
+      type: DataTypes.STRING,
       allowNull: false,
     },
   }, {
