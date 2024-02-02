@@ -2,7 +2,7 @@
 // Authorization Functions
 function _authorizationError(res) {
     res.statusCode = 403;
-    res.json({ message: "Forbidden" });
+    return res.json({ message: "Forbidden" });
 }
 function isOrganizer(user, group) {
     return group.organizerId == user.id;
