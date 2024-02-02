@@ -39,6 +39,7 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'Attendance',
     defaultScope: {
       attributes: {
+        include: ["id"],
         exclude: ["createdAt", "updatedAt"]
       }
     }

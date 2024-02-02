@@ -3,8 +3,9 @@ function getNumMembers(group) {
     return group.Members.filter(user => user.Membership.status != "pending").length;
 };
 function getGroupImage(group) {
-    if (group.GroupImages.length) return group.GroupImages[0].preview ? group.GroupImages[0].url : false;
-    else return false;
+    let trueImages = group.GroupImages.filter(image => image.preview == true);
+    if (trueImages.length) return trueImages[0].url;
+    else return null;
 };
 function formatGroups(groups) {
     groups.forEach((group) => {
@@ -22,8 +23,9 @@ function getAttendees(event) {
     return event.Attendees.filter(user => user.Attendance.status == "attending").length;
 };
 function getEventImage(event) {
-    if (event.EventImages.length) return event.EventImages[0].preview ? event.EventImages[0].url : false;
-    else return false;
+    let trueImages = event.EventImages.filter(image => image.preview == true);
+    if (trueImages.length) return trueImages[0].url;
+    else return null;
 };
 function formatEvents(events) {
     events.forEach((event) => {
@@ -36,7 +38,30 @@ function formatEvents(events) {
     });
     return events;
 };
-
+function formatMemberships(membership) {
+    let resBody = membership.dataValues;
+    delete resBody.groupId;
+    delete resBody.createdAt;
+    delete resBody.updatedAt;
+    resBody.memberId = resBody.userId;
+    delete resBody.userId;
+    delete resBody.id;
+    return resBody;
+};
+function formatAttendances(attendance) {
+    let resBody = attendance.dataValues;
+    delete resBody.eventId;
+    delete resBody.createdAt;
+    delete resBody.updatedAt;
+    delete resBody.id;
+    return resBody;
+};
+function removeUpdatedAt(instance) {
+    let resBody = instance.dataValues;
+    delete resBody.updatedAt;
+    delete resBody.createdAt;
+    return resBody
+}
 module.exports = {
-    getNumMembers, getGroupImage, formatGroups, getAttendees, getEventImage, formatEvents
+    getNumMembers, getGroupImage, formatGroups, getAttendees, getEventImage, formatEvents, formatMemberships, formatAttendances, removeUpdatedAt
 };

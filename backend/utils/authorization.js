@@ -2,14 +2,14 @@
 // Authorization Functions
 function _authorizationError(res) {
     res.statusCode = 403;
-    res.json({ message: "Forbidden" });
+    return res.json({ message: "Forbidden" });
 }
 function isOrganizer(user, group) {
     return group.organizerId == user.id;
 }
 function isCoHost(user, group) {
     let coHosts = group.Members.filter(member => member.Membership.status === "co-host").map(member => member.id);
-    return coHosts.includes(user.id);
+    return coHosts.includes(user.id) || isOrganizer(user, group);
 }
 function isMember(user, group) {
     let members = group.Members.filter(member => member.Membership.status != "pending").map(member => member.id)
