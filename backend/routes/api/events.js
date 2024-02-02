@@ -4,7 +4,7 @@ const { requireAuth } = require("../../utils/auth.js");
 const { handleValidationErrors, validateEditAttendance, validateEditEvent, validateQueryParams } = require('../../utils/validation.js');
 const { _authorizationError, isOrganizer, isCoHost, isMember, isAttending } = require('../../utils/authorization.js');
 const { _userNotFound, _eventNotFound, _attendanceNotFound } = require("../../utils/errors.js");
-const { getAttendees, formatEvents } = require('../../utils/formatting.js');
+const { getAttendees, formatEvents, formatAttendances, removeUpdatedAt } = require('../../utils/formatting.js');
 const { Op } = require("sequelize");
 
 const router = express.Router();
@@ -72,11 +72,11 @@ router.get("/:eventId", async (req, res) => {
         },
         {
           association: "Group",
-          attributes: ["id", "name", "city", "state"],
+          attributes: ["id", "name", "city", "state", "private"],
         },
         {
           association: "Venue",
-          attributes: ["id", "city", "state"],
+          attributes: ["id", "city", "state", "address", "lat", "lng"],
         }
     ]});
     if (!event) return _eventNotFound(res);
@@ -165,7 +165,6 @@ router.put("/:eventId", [requireAuth, validateEditEvent], async (req, res) => {
                 else event.venueId = venueId;
             }
             await event.save({validate: true});
-            res.statusCode = 201;
             let resBody = event.dataValues;
             delete resBody.Attendees;
             delete resBody.Group;
@@ -191,7 +190,7 @@ router.delete("/:eventId", requireAuth, async (req, res) => {
     if (!event) {
         return _eventNotFound(res);
     } else {
-        if (isOrganizer(user, event.Group) || isCoHost(user, event.Group)) {
+        if (isCoHost(user, event.Group)) {
             await event.destroy();
             res.json({ message: "Successfully deleted"});
         }
@@ -220,7 +219,7 @@ router.get("/:eventId/attendees", async (req, res) => {
         ]
     });
     if (!event) return _eventNotFound(res);
-    if (isOrganizer(user, event.Group) || isCoHost(user, event.Group)) return res.json({ "Attendees": event.Attendees });
+    if (isCoHost(user, event.Group)) return res.json({ "Attendees": event.Attendees });
     else {
         return res.json({ "Attendees": event.Attendees.filter(user => user.Attendance.status !== "pending") });
     }
@@ -262,7 +261,7 @@ router.post("/:eventId/attendance", requireAuth, async (req, res) => {
                     eventId: event.id
                 }
             );
-            return res.json(newAttendance);
+            return res.json(formatAttendances(newAttendance));
         }
         else return _authorizationError(res);
     }
@@ -319,10 +318,10 @@ router.put("/:eventId/attendance", [requireAuth, validateEditAttendance], async 
     });
     if (!attendance) return _attendanceNotFound(res);
     else {
-        if (isCoHost(user, event.Group) || isOrganizer(user, event.Group)) {
+        if (isCoHost(user, event.Group)) {
             attendance.status = status;
             await attendance.save();
-            return res.json(attendance);
+            return res.json(removeUpdatedAt(attendance));
         }
         else return _authorizationError(res);
     }

@@ -3,7 +3,7 @@ const { User, Group, Venue, Event, Membership } = require('../../db/models');
 const { requireAuth } = require("../../utils/auth.js");
 const { handleValidationErrors, validateCreateGroup, validateEditGroup, validateCreateVenue, validateCreateEvent, validateEditMembership } = require('../../utils/validation.js');
 const { _authorizationError, isOrganizer, isCoHost } = require('../../utils/authorization.js');
-const { getNumMembers, formatGroups, formatEvents } = require('../../utils/formatting.js');
+const { getNumMembers, formatGroups, formatEvents, formatMemberships, removeUpdatedAt } = require('../../utils/formatting.js');
 const { _groupNotFound, _userNotFound, _membershipNotFound, _venueNotFound } = require("../../utils/errors.js");
 
 const router = express.Router();
@@ -41,7 +41,9 @@ router.get("/current", requireAuth, async (req, res) => {
         }
     }
     });
-    res.json({ "Groups": formatGroups(currentUser.Members) });
+    let resBody = formatGroups(currentUser.Members);
+    resBody.forEach(group => delete group.dataValues.Membership);
+    res.json({ "Groups": resBody });
 });
 
 // Get Group details by id
@@ -64,7 +66,7 @@ router.get("/:groupId", async (req, res) => {
         {
             model: Venue,
             attributes: {
-                exclude: ["createdAt", "updatedAt", "groupId"]
+                exclude: ["createdAt", "updatedAt"]
             }
         }
     ] });
@@ -93,6 +95,13 @@ router.post("/", [requireAuth, validateCreateGroup], async (req, res) => {
         state
     })
     if (newGroup) {
+        const membership = await Membership.findOne({
+            where: {
+                userId: user.id,
+                groupId: newGroup.id
+            }
+        });
+        await membership.destroy();
         res.statusCode = 201;
         res.json(newGroup);
     };
@@ -150,7 +159,10 @@ router.put("/:groupId", [requireAuth, validateEditGroup], async (req, res) => {
             if (city) group.city = city;
             if (state) group.state = state;
             await group.save({validate: true});
-            res.json(formatGroups([group]));
+            let resBody = group.dataValues;
+            delete resBody.Members;
+            delete resBody.GroupImages
+            res.json(resBody);
         }
         else return _authorizationError(res);
     }
@@ -177,7 +189,7 @@ router.get("/:groupId/venues", requireAuth, async (req, res) => {
     const group = await Group.findByPk(req.params.groupId, { include: [{ model: Venue }, { association: "Members" }] });
     if (!group) return _groupNotFound(res);
     else {
-        if (isOrganizer(user, group) || isCoHost(user, group)) {
+        if (isCoHost(user, group)) {
             res.json({ "Venues": group.Venues });
         }
         else return _authorizationError(res);
@@ -192,7 +204,7 @@ router.post("/:groupId/venues", [requireAuth, validateCreateVenue], async (req, 
     const { address, city, state, lat, lng } = req.body;
     if (!group) return _groupNotFound(res);
     else {
-        if (isOrganizer(user, group) || isCoHost(user, group)) {
+        if (isCoHost(user, group)) {
             const newVenue = await group.createVenue({
                 address,
                 city,
@@ -200,7 +212,7 @@ router.post("/:groupId/venues", [requireAuth, validateCreateVenue], async (req, 
                 lat,
                 lng
             });
-            res.json(newVenue);
+            res.json(removeUpdatedAt(newVenue));
         }
         else return _authorizationError(res);
     }
@@ -251,7 +263,7 @@ router.post("/:groupId/events", [requireAuth, validateCreateEvent], async (req, 
             const venue = await Venue.findByPk(venueId);
             if (!venue) return _venueNotFound(res);
         }
-        if (isOrganizer(user, group) || isCoHost(user, group)) {
+        if (isCoHost(user, group)) {
             const newEvent = await group.createEvent({
                 venueId, name, type, capacity, price, description, startDate: startDate, endDate: endDate
             });
@@ -277,7 +289,7 @@ router.get("/:groupId/members", async (req, res) => {
     });
     if (!group) return _groupNotFound(res);
     // if organizer or cohost, show all
-    if (isOrganizer(user, group) || isCoHost(user, group)) return res.json({ "Members": group.Members });
+    if (isCoHost(user, group)) return res.json({ "Members": group.Members });
     else {
         return res.json({ "Members": group.Members.filter(user => user.Membership.status !== "pending") });
     }
@@ -312,7 +324,8 @@ router.post("/:groupId/membership", requireAuth, async (req, res) => {
                 groupId: group.id
             }
         );
-        return res.json(newMembership);
+        let resBody = formatMemberships(newMembership);
+        return res.json(resBody);
     }
     else {
         if (memberships.filter(member => member.id == user.id)[0].status == "pending") {
@@ -361,7 +374,7 @@ router.put("/:groupId/membership", [requireAuth, validateEditMembership], async 
                 if (isCoHost(user, group)) {
                     membership.status = status;
                     await membership.save();
-                    return res.json(membership);
+                    return res.json(removeUpdatedAt(membership));
                 }
                 else return _authorizationError(res);
             }
@@ -369,24 +382,16 @@ router.put("/:groupId/membership", [requireAuth, validateEditMembership], async 
                 if (isOrganizer(user, group)) {
                     membership.status = status;
                     await membership.save();
-                    return res.json(membership);
+                    return res.json(removeUpdatedAt(membership));
                 }
                 else return _authorizationError(res);
             }
-        }
-        if (membership.status == "member") {
-            if (isOrganizer(user, group)) {
-                membership.status = status;
-                await membership.save();
-                return res.json(membership);
-            }
-            else return _authorizationError(res);
         }
         else {
             if (isOrganizer(user, group)) {
                 membership.status = status;
                 await membership.save();
-                return res.json(membership);
+                return res.json(removeUpdatedAt(membership));
             }
             else return _authorizationError(res);
         }

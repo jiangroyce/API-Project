@@ -4,6 +4,7 @@ const { requireAuth } = require("../../utils/auth.js");
 const { validateEditVenue } = require('../../utils/validation.js');
 const { _authorizationError, isOrganizer, isCoHost } = require('../../utils/authorization.js');
 const { _venueNotFound } = require("../../utils/errors.js");
+const { removeUpdatedAt } = require('../../utils/formatting');
 
 const router = express.Router();
 
@@ -26,8 +27,7 @@ router.put("/:venueId", [requireAuth, validateEditVenue], async (req, res) => {
             if (lat) venue.lat = lat;
             if (lng) venue.lng = lng;
             await venue.save({validate: true});
-            res.statusCode = 201;
-            res.json(venue);
+            res.json(removeUpdatedAt(venue));
         }
         else return _authorizationError(res);
     }

@@ -4,7 +4,7 @@ function getNumMembers(group) {
 };
 function getGroupImage(group) {
     let trueImages = group.GroupImages.filter(image => image.preview == true);
-    if (trueImages.length) return trueImages.url;
+    if (trueImages.length) return trueImages[0].url;
     else return null;
 };
 function formatGroups(groups) {
@@ -24,7 +24,7 @@ function getAttendees(event) {
 };
 function getEventImage(event) {
     let trueImages = event.EventImages.filter(image => image.preview == true);
-    if (trueImages.length) return trueImages.url;
+    if (trueImages.length) return trueImages[0].url;
     else return null;
 };
 function formatEvents(events) {
@@ -38,7 +38,30 @@ function formatEvents(events) {
     });
     return events;
 };
-
+function formatMemberships(membership) {
+    let resBody = membership.dataValues;
+    delete resBody.groupId;
+    delete resBody.createdAt;
+    delete resBody.updatedAt;
+    resBody.memberId = resBody.userId;
+    delete resBody.userId;
+    delete resBody.id;
+    return resBody;
+};
+function formatAttendances(attendance) {
+    let resBody = attendance.dataValues;
+    delete resBody.eventId;
+    delete resBody.createdAt;
+    delete resBody.updatedAt;
+    delete resBody.id;
+    return resBody;
+};
+function removeUpdatedAt(instance) {
+    let resBody = instance.dataValues;
+    delete resBody.updatedAt;
+    delete resBody.createdAt;
+    return resBody
+}
 module.exports = {
-    getNumMembers, getGroupImage, formatGroups, getAttendees, getEventImage, formatEvents
+    getNumMembers, getGroupImage, formatGroups, getAttendees, getEventImage, formatEvents, formatMemberships, formatAttendances, removeUpdatedAt
 };
