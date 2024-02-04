@@ -14,8 +14,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       status: {
-        type: Sequelize.ENUM("pending", "member", "co-host"),
-        defaultValue: "co-host"
+        type: Sequelize.ENUM("pending", "member", "co-host", "host"),
+        defaultValue: "host"
       },
       userId: {
         type: Sequelize.INTEGER,

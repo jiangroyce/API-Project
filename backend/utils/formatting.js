@@ -1,6 +1,6 @@
 // Group Formatting Functions
 function getNumMembers(group) {
-    return group.Members.filter(user => user.Membership.status != "pending").length;
+    return group.Members.filter(user => !["pending", "host"].includes(user.Membership.status)).length;
 };
 function getGroupImage(group) {
     let trueImages = group.GroupImages.filter(image => image.preview == true);
@@ -46,6 +46,7 @@ function formatMemberships(membership) {
     resBody.memberId = resBody.userId;
     delete resBody.userId;
     delete resBody.id;
+    delete resBody.updatedAt;
     return resBody;
 };
 function formatAttendances(attendance) {
