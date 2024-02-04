@@ -23,7 +23,7 @@ module.exports = {
     const group2 = await Group.findOne({ where: { name: "Fake Users Anonymous" } });
     await Membership.bulkCreate([
       {
-        status:"co-host",
+        status:"host",
         userId: person1.id,
         groupId: group1.id
       },

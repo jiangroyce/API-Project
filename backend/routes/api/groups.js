@@ -95,13 +95,6 @@ router.post("/", [requireAuth, validateCreateGroup], async (req, res) => {
         state
     })
     if (newGroup) {
-        const membership = await Membership.findOne({
-            where: {
-                userId: user.id,
-                groupId: newGroup.id
-            }
-        });
-        await membership.destroy();
         res.statusCode = 201;
         res.json(newGroup);
     };
@@ -374,7 +367,7 @@ router.put("/:groupId/membership", [requireAuth, validateEditMembership], async 
                 if (isCoHost(user, group)) {
                     membership.status = status;
                     await membership.save();
-                    return res.json(removeUpdatedAt(membership));
+                    return res.json(formatMemberships(membership));
                 }
                 else return _authorizationError(res);
             }
@@ -382,7 +375,7 @@ router.put("/:groupId/membership", [requireAuth, validateEditMembership], async 
                 if (isOrganizer(user, group)) {
                     membership.status = status;
                     await membership.save();
-                    return res.json(removeUpdatedAt(membership));
+                    return res.json(formatMemberships(membership));
                 }
                 else return _authorizationError(res);
             }
@@ -391,7 +384,7 @@ router.put("/:groupId/membership", [requireAuth, validateEditMembership], async 
             if (isOrganizer(user, group)) {
                 membership.status = status;
                 await membership.save();
-                return res.json(removeUpdatedAt(membership));
+                return res.json(formatMemberships(membership));
             }
             else return _authorizationError(res);
         }
