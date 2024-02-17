@@ -1,0 +1,17 @@
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 5px;
+}
+
+.errors {
+    color: red;
+}

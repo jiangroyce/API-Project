@@ -1,7 +1,58 @@
 .profile-dropdown {
   position: absolute;
+  right: 20px;
+  width: fit-content;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: lightblue;
+  border-radius: 15px;
 }
 
 .hidden {
   display: none;
+}
+
+.profile-dropdown > * {
+  padding: 5px;
+}
+
+ul {
+  display: flex;
+  justify-content: space-between;
+  list-style-type: none;
+  border-bottom: 3px solid gray;
+  padding: 20px 10px;
+}
+
+#home-button {
+  font-size: 50px;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  color:orangered;
+  text-decoration: none;
+}
+
+#not-logged-in {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 10px;
+}
+
+#not-logged-in > li {
+  padding: 5px;
+  font-size: large;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  cursor: pointer;
+}
+
+#not-logged-in > li:hover {
+  color: orangered;
+  font-size: larger;
+  font-weight: bolder;
+  cursor: pointer;
 }

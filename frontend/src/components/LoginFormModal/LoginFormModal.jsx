@@ -24,12 +24,24 @@ function LoginFormModal() {
       });
   };
 
+  const logInDemoUser = (e) => {
+    e.preventDefault();
+    return dispatch(sessionActions.login({ credential: "demo@user.io", password: "password" }))
+      .then(closeModal)
+      .catch(async (res) => {
+        const data = await res.json();
+        if (data && data.errors) {
+          setErrors(data.errors);
+        }
+      });
+  };
+
   return (
     <>
       <h1>Log In</h1>
       <form onSubmit={handleSubmit}>
         <label>
-          Username or Email
+          Username or Email:
           <input
             type="text"
             value={credential}
@@ -38,7 +50,7 @@ function LoginFormModal() {
           />
         </label>
         <label>
-          Password
+          Password:
           <input
             type="password"
             value={password}
@@ -46,9 +58,10 @@ function LoginFormModal() {
             required
           />
         </label>
-        {errors.credential && <p>{errors.credential}</p>}
-        <button type="submit">Log In</button>
+        {errors.credential && <p className='errors'>* {errors.credential}</p>}
+        <button type="submit" disabled={credential.length < 4 || password.length < 6}>Log In</button>
       </form>
+      <button onClick={logInDemoUser}>Log in as Demo User</button>
     </>
   );
 }
