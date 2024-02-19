@@ -28,7 +28,7 @@ module.exports = {
       preview: true
     });
     await group2.createGroupImage({
-      url: "https://archives.bulbagarden.net/media/upload/thumb/3/34/Indigo_Plateau_PE.png/300px-Indigo_Plateau_PE.png",
+      url: "https://comicvine.gamespot.com/a/uploads/scale_medium/11/114183/4353277-kanto%20gym%20leaders.jpg",
       preview: true
     });
     await group3.createGroupImage({
@@ -36,11 +36,11 @@ module.exports = {
       preview: true
     })
     await group4.createGroupImage({
-      url: "https://archives.bulbagarden.net/media/upload/thumb/d/d8/Nurse_Joy_JN.png/250px-Nurse_Joy_JN.png",
+      url: "https://static1.thegamerimages.com/wordpress/wp-content/uploads/2021/01/efa319ad51b88e1ab12e50883cb43055.png",
       preview: true
     })
     await group5.createGroupImage({
-      url: "https://archives.bulbagarden.net/media/upload/thumb/4/47/HeartGold_SoulSilver_Team_Rocket_Grunt.png/250px-HeartGold_SoulSilver_Team_Rocket_Grunt.png",
+      url: "https://e0.pxfuel.com/wallpapers/66/512/desktop-wallpaper-team-rocket-for-your.jpg",
       preview: true
     })
   },

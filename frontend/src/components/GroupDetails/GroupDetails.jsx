@@ -1,6 +1,11 @@
+import "./GroupDetails.css"
+
+import { useNavigate } from "react-router-dom";
+
 function GroupDetails({group}) {
+    const navigate = useNavigate();
     return (
-        <div className="group-details">
+        <div className="group-details" onClick={() => navigate(`${group.id}`)}>
             <img src={group.previewImage} />
             <div className="group-info">
                 <h1>{group.name}</h1>
