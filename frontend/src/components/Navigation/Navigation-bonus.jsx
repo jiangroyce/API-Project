@@ -16,14 +16,17 @@ function Navigation({ isLoaded }) {
       { isLoaded &&
       sessionUser ?
       (
+        <div id="logged-in">
+        <NavLink id="home-button" to="/groups/new">Start a New Group</NavLink>
         <li>
           <ProfileButton user={sessionUser} />
         </li>
+        </div>
       ) :
       (
         <div id="not-logged-in">
           <li><LoginButton /></li>
-          <li><SignUpButton /></li>
+          <li><SignUpButton itemText={"Sign Up"}/></li>
         </div>
       )
       }

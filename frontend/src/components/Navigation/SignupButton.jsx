@@ -1,12 +1,12 @@
 import OpenModalMenuItem from './OpenModalMenuItem';
 import SignupFormModal from '../SignupFormModal';
 
-function SignUpButton() {
+function SignUpButton({itemText}) {
 
     return (
       <>
         <OpenModalMenuItem
-            itemText="Sign Up"
+            itemText={itemText}
             modalComponent={<SignupFormModal />}
         />
       </>

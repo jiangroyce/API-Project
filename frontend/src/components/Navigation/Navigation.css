@@ -7,7 +7,7 @@
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  background-color: lightblue;
+  background-color: lightgray;
   border-radius: 15px;
 }
 
@@ -51,6 +51,28 @@ ul {
 }
 
 #not-logged-in > li:hover {
+  color: orangered;
+  font-weight: bolder;
+  cursor: pointer;
+}
+
+#logged-in {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 10px;
+}
+
+#logged-in > * {
+  padding: 5px;
+  color: black;
+  font-size: large;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  cursor: pointer;
+}
+
+#logged-in > *:hover {
   color: orangered;
   font-size: larger;
   font-weight: bolder;
