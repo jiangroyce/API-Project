@@ -21,25 +21,32 @@ module.exports = {
     */
     await User.bulkCreate([
       {
-        email: 'demo@user.io',
-        firstName: "Demo",
-        lastName: "Lition",
-        username: 'Demo-lition',
+        email: 'professor@oak.io',
+        firstName: "Samuel",
+        lastName: "Oak",
+        username: 'ProfessorOak',
         hashedPassword: bcrypt.hashSync('password')
       },
       {
-        email: 'user1@user.io',
-        firstName: "Fake",
-        lastName: "User1",
-        username: 'FakeUser1',
-        hashedPassword: bcrypt.hashSync('password2')
+        email: 'giovanni@team-rocket.com',
+        firstName: "Giovanni",
+        lastName: "Sakaki",
+        username: 'GiovanniR',
+        hashedPassword: bcrypt.hashSync('password')
       },
       {
-        email: 'user2@user.io',
-        firstName: "Fake",
-        lastName: "User2",
-        username: 'FakeUser2',
-        hashedPassword: bcrypt.hashSync('password3')
+        email: 'bugcatcherjimmy@user.io',
+        firstName: "Jimmy",
+        lastName: "Sparks",
+        username: 'BugCatcherJimmy',
+        hashedPassword: bcrypt.hashSync('password')
+      },
+      {
+        email: 'brock@indigo-league.com',
+        firstName: "Brock",
+        lastName: "Takeshi",
+        username: 'NurseJoyNo1Fan',
+        hashedPassword: bcrypt.hashSync('password')
       }
     ], { validate: true })
   },
@@ -54,7 +61,7 @@ module.exports = {
     options.tableName = 'Users';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      username: { [Op.in]: ['Demo-lition', 'FakeUser1', 'FakeUser2'] }
+      email: { [Op.in]: ["professor@oak.io", "giovanni@team-rocket.com", "bugcatcherjimmy@user.io", "brock@indigo-league.com"] }
     }, {})
   }
 };

@@ -17,10 +17,12 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    const person1 = await User.findOne({ where: { email: "demo@user.io" } });
-    const person2 = await User.findOne({ where: { email: "user1@user.io" } });
-    const event1 = await Event.findOne({ where: {name: "LA Construction New Years Party"} });
-    const event2 = await Event.findOne({ where: {name: "Fake Users Anon Hackathon"} });
+    const people = ["professor@oak.io", "giovanni@team-rocket.com", "bugcatcherjimmy@user.io", "brock@indigo-league.com"];
+    const person1 = await User.findOne({ where: { email: people[0] } });
+    const person2 = await User.findOne({ where: { email: people[1] } });
+    const events = ["Pokedex Giveaway", "Weekend Battle Tournament", "Gym Trainer Exchange", "Nurse Joy Meet and Greet", "Secret Meeting"];
+    const event1 = await Event.findOne({ where: {name: events[0]} });
+    const event2 = await Event.findOne({ where: {name: events[1]} });
     await Attendance.bulkCreate([
       {
         eventId: event1.id,

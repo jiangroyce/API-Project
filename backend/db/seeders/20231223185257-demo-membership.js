@@ -17,20 +17,38 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    const person1 = await User.findOne({ where: { email: "demo@user.io" } });
-    const person2 = await User.findOne({ where: { email: "user1@user.io" } });
-    const group1 = await Group.findOne({ where: { name: "Los Angeles Construction" } });
-    const group2 = await Group.findOne({ where: { name: "Fake Users Anonymous" } });
+    const users = ["professor@oak.io", "giovanni@team-rocket.com", "bugcatcherjimmy@user.io", "brock@indigo-league.com"];
+    const person1 = await User.findOne({ where: { email: users[0] } });
+    const person2 = await User.findOne({ where: { email: users[1] } });
+    const person3 = await User.findOne({ where: { email: users[2] } });
+    const person4 = await User.findOne({ where: { email: users[3] } });
+    const groups = ["Kanto Pokemon Trainers", "Indigo League Gym Association", "Bug Catchers United", "Nurse Joy Fan Club", "Team Rocket"];
+    const group1 = await Group.findOne({ where: { name: groups[0] } });
+    const group2 = await Group.findOne({ where: { name: groups[1] } });
+    const group3 = await Group.findOne({ where: { name: groups[2] } });
+    const group4 = await Group.findOne({ where: { name: groups[3] } });
+    const group5 = await Group.findOne({ where: { name: groups[4] } });
     await Membership.bulkCreate([
       {
-        status:"host",
         userId: person1.id,
         groupId: group1.id
       },
       {
         userId: person2.id,
         groupId: group2.id
-      }
+      },
+      {
+        userId: person3.id,
+        groupId: group3.id
+      },
+      {
+        userId: person4.id,
+        groupId: group4.id
+      },
+      {
+        userId: person2.id,
+        groupId: group5.id
+      },
     ], { validate: true });
   },
 

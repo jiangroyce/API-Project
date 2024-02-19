@@ -6,9 +6,8 @@ function GroupDetails({group}) {
                 <h1>{group.name}</h1>
                 <h2>{group.city}, {group.state}</h2>
                 <p>{group.about}</p>
-                <div className="group-type">
-                    <p>{group.type}</p>
-                    <p>{group.private}</p>
+                <div className="members-type">
+                    {group.numMembers} members · {group.private ? "Private" : "Public"}
                 </div>
             </div>
         </div>
