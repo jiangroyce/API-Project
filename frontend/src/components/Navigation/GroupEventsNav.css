@@ -1,0 +1,35 @@
+.GroupEventsNav {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-bottom: 3px solid gray;
+    width: 50%;
+}
+nav {
+    display: flex;
+    justify-content: space-evenly;
+    font-size: 36px;
+    padding: 0 10px;
+}
+
+nav > * {
+    padding: 0 20px;
+}
+
+a {
+    color: grey;
+    text-decoration: none;
+}
+
+.active {
+    font-weight: bold;
+    text-decoration: underline;
+    color: teal;
+    cursor: default;
+}
+
+p {
+    font-size: 20px;
+    color: gray;
+    padding: 0 30px;
+}

@@ -7,6 +7,8 @@ import Navigation from './components/Navigation/Navigation-bonus';
 import LandingPage from './components/LandingPage';
 import * as sessionActions from './store/session';
 import { Modal } from './context/Modal';
+import GroupsList from './components/GroupsList';
+import EventsList from './components/EventsList';
 
 function Layout() {
   const dispatch = useDispatch();
@@ -35,14 +37,22 @@ const router = createBrowserRouter([
         path: '/',
         element: <LandingPage />
       },
-      // {
-      //   path: 'login',
-      //   element: <LoginFormPage />
-      // },
-      // {
-      //   path: 'signup',
-      //   element: <SignupFormPage />
-      // }
+      {
+        path: 'groups',
+        element: <GroupsList />
+      },
+      {
+        path: 'groups/:id',
+        element: <p>Groups Details</p>
+      },
+      {
+        path: 'groups/new',
+        element: <p>New Group</p>
+      },
+      {
+        path: 'events',
+        element: <EventsList />
+      }
     ]
   }
 ]);
