@@ -56,3 +56,13 @@ ul {
   font-weight: bolder;
   cursor: pointer;
 }
+
+i {
+  font-size: 50px;
+  color: orangered;
+}
+
+#profile-button {
+  background-color: none;
+  border: none;
+}
