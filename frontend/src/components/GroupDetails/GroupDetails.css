@@ -2,6 +2,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-bottom: 3px solid gray;
+    cursor: pointer;
 }
 
 .group-details > img {
@@ -14,7 +16,6 @@
     width: 450px;
     height: 200px;
     padding-left: 10px;
-    cursor: pointer;
 }
 
 .group-info > h1 {
@@ -23,11 +24,17 @@
 
 .group-info > h2 {
     font-size: large;
+    color: gray;
 }
 
 .group-info > p {
+    color: black;
     padding: 0;
     font-size: medium;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.members-type {
+    color: gray
 }
