@@ -1,5 +1,5 @@
 const express = require('express');
-const { User, Group, Venue, Event, Membership } = require('../../db/models');
+const { User, Group, Venue, Event, Membership, EventImage } = require('../../db/models');
 const { requireAuth } = require("../../utils/auth.js");
 const { handleValidationErrors, validateCreateGroup, validateEditGroup, validateCreateVenue, validateCreateEvent, validateEditMembership } = require('../../utils/validation.js');
 const { _authorizationError, isOrganizer, isCoHost } = require('../../utils/authorization.js');
@@ -17,6 +17,9 @@ router.get("/", async (req, res) => {
             },
             {
                 association: "GroupImages"
+            },
+            {
+                association: "Events"
             }
         ]
     });
@@ -233,7 +236,7 @@ router.get("/:groupId/events", async (req, res) => {
                 }
             ],
             attributes: {
-                exclude: ["description", "capacity", "price", "createdAt", "updatedAt"]
+                exclude: ["capacity", "price", "createdAt", "updatedAt"]
             },
         },
     });

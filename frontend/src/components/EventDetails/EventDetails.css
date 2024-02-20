@@ -1,0 +1,8 @@
+.event-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.event-details-banner {
+    display: flex;
+}

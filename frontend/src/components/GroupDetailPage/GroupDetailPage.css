@@ -1,0 +1,15 @@
+.group-details-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.group-details-container > nav {
+    align-self: flex-start;
+    font-size: small;
+}
+
+.group-info-banner {
+    display: flex;
+}

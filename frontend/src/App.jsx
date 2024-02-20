@@ -9,6 +9,7 @@ import * as sessionActions from './store/session';
 import { Modal } from './context/Modal';
 import GroupsList from './components/GroupsList';
 import EventsList from './components/EventsList';
+import GroupDetailPage from './components/GroupDetailPage';
 
 function Layout() {
   const dispatch = useDispatch();
@@ -43,7 +44,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'groups/:id',
-        element: <p>Groups Details</p>
+        element: <GroupDetailPage />
       },
       {
         path: 'groups/new',
