@@ -44,12 +44,12 @@
     width: 40%;
 }
 
-.group-details {
+.event-info-container > .group-details {
     padding: 0 5%;
     border: 3px solid gray;
     border-radius: 15px;
 }
-.group-details > img {
+.event-info-container > .group-details > img {
     width: 60%;
 }
 
@@ -118,4 +118,18 @@
     padding: 0;
     margin: 0;
     color: black;
+}
+
+.host-actions {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.host-actions > button {
+    padding: 10px 20px;
+    background-color: gray;
+    border-radius: 15px;
+    cursor: pointer;
 }

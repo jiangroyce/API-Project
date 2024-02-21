@@ -50,6 +50,7 @@
     padding: 10px 20px;
     background-color: gray;
     cursor: pointer;
+    border-radius: 15px;
 }
 
 .group-events-container {

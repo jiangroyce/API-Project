@@ -8,6 +8,7 @@ import GroupDetails from "../GroupDetails";
 import { getGroup } from "../../store/groups";
 
 function EventDetailPage () {
+    const sessionUser = useSelector(state => state.session.user);
     const dispatch = useDispatch();
     const { id } = useParams();
     const event = useSelector((state) => state.events[id]);
@@ -50,6 +51,13 @@ function EventDetailPage () {
                             <div className="type-info">{event.type}</div>
                         </div>
                     </div>
+                    {sessionUser?.id == event.host.id ? (
+                        <div className="host-actions">
+                            <button>Update</button>
+                            <button>Delete</button>
+                        </div>
+                    ) : null }
+
                 </div>
             </div>
             <div className="event-description">
