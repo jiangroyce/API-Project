@@ -1,5 +1,5 @@
 const express = require('express');
-const { User, Group, Venue, Event, Membership, EventImage } = require('../../db/models');
+const { User, Group, Venue, Event, Membership, Attendance } = require('../../db/models');
 const { requireAuth } = require("../../utils/auth.js");
 const { handleValidationErrors, validateCreateGroup, validateEditGroup, validateCreateVenue, validateCreateEvent, validateEditMembership } = require('../../utils/validation.js');
 const { _authorizationError, isOrganizer, isCoHost } = require('../../utils/authorization.js');
@@ -263,6 +263,13 @@ router.post("/:groupId/events", [requireAuth, validateCreateEvent], async (req, 
             const newEvent = await group.createEvent({
                 venueId, name, type, capacity, price, description, startDate: startDate, endDate: endDate
             });
+            const newAttendance = await Attendance.create(
+                {
+                    status: "host",
+                    userId: user.id,
+                    eventId: newEvent.id
+                }
+            );
             let resBody = newEvent.dataValues;
             delete resBody.createdAt;
             delete resBody.updatedAt;

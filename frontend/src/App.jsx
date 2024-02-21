@@ -10,6 +10,7 @@ import { Modal } from './context/Modal';
 import GroupsList from './components/GroupsList';
 import EventsList from './components/EventsList';
 import GroupDetailPage from './components/GroupDetailPage';
+import EventDetailPage from './components/EventDetailPage/EventDetailPage';
 
 function Layout() {
   const dispatch = useDispatch();
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
       {
         path: 'events',
         element: <EventsList />
+      },
+      {
+        path: 'events/:id',
+        element: <EventDetailPage />
       }
     ]
   }

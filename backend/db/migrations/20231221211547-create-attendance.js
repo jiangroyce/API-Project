@@ -28,8 +28,8 @@ module.exports = {
         hooks: true
       },
       status: {
-        type: Sequelize.ENUM("pending", "attending", "waitlist"),
-        defaultValue: "pending"
+        type: Sequelize.ENUM("pending", "attending", "waitlist", "host"),
+        defaultValue: "host"
       },
       createdAt: {
         allowNull: false,

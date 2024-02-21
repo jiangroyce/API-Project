@@ -5,11 +5,11 @@ function _authorizationError(res) {
     return res.json({ message: "Forbidden" });
 }
 function isOrganizer(user, group) {
-    return group.organizerId == user.id;
+    return group.organizerId == user?.id;
 }
 function isCoHost(user, group) {
     let coHosts = group.Members.filter(member => member.Membership.status === "co-host").map(member => member.id);
-    return coHosts.includes(user.id) || isOrganizer(user, group);
+    return coHosts.includes(user?.id) || isOrganizer(user, group);
 }
 function isMember(user, group) {
     let members = group.Members.filter(member => member.Membership.status != "pending").map(member => member.id)

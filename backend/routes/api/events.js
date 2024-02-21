@@ -13,7 +13,7 @@ const router = express.Router();
 router.get("/", validateQueryParams, async (req, res, next) => {
     let query = {
         attributes: {
-            exclude: ["description", "capacity", "price"]
+            exclude: ["capacity", "price"]
         },
         include: [
         {

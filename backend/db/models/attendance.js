@@ -31,8 +31,8 @@ module.exports = (sequelize, DataTypes) => {
       hooks: true
     },
     status: {
-      type: DataTypes.ENUM("pending", "attending", "waitlist"),
-      defaultValue: "pending"
+      type: DataTypes.ENUM("pending", "attending", "waitlist", "host"),
+      defaultValue: "host"
     },
   }, {
     sequelize,

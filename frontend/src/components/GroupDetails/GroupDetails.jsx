@@ -9,9 +9,9 @@ function GroupDetails({group}) {
     const navigate = useNavigate();
     return (
         <div className="group-details" onClick={async () => {
-            await dispatch(getGroup(group.id));
-            await dispatch(getEvents(group.id));
-            navigate(`${group.id}`);
+            // await dispatch(getGroup(group.id));
+            // await dispatch(getEvents(group.id));
+            navigate(`/groups/${group.id}`);
         }}>
             <img src={group.previewImage} />
             <div className="group-info">

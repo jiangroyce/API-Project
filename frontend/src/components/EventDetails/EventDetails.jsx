@@ -1,18 +1,39 @@
 import "./EventDetails.css"
-function EventDetails({event}){
 
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { getEvent } from "../../store/events";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+
+function EventDetails({eventId}){
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const [isLoaded, setIsLoaded] = useState(false);
+    useEffect(() => {
+        dispatch(getEvent(eventId)).then(setIsLoaded(true))
+    }, [eventId, dispatch]);
+    const event = useSelector(state => state.events[eventId]);
     return (
-        <div className="event-details">
-            <div className="event-details-banner">
-                <img src={event.previewImage} />
-                <div className="event-details-info">
-                    <h3>{event.name}</h3>
-                    <h4>{event.Venue.city}, {event.Venue.state}</h4>
+        <div className="event-details" onClick={async () => {
+            navigate(`/events/${eventId}`)
+        }}>
+            { isLoaded && event &&
+            (
+                <>
+                <div className="event-details-banner">
+                    <img src={event.previewImage} />
+                    <div className="event-details-info">
+                        <h4>{new Date(event.startDate).toISOString().split('T')[0] + "·" + new Date(event.startDate).toString().split(' ')[4]}</h4>
+                        <h3>{event.name}</h3>
+                        <h4>{event.Venue.city}, {event.Venue.state}</h4>
+                    </div>
                 </div>
-            </div>
-            <div className="event-about">
-                <p>{event.description}</p>
-            </div>
+                <div className="event-about">
+                    <p>{event.description}</p>
+                </div>
+                </>
+            )
+            }
         </div>
     )
 };
