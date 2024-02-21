@@ -3,6 +3,7 @@ import { csrfFetch } from './csrf.js';
 const LOAD_GROUPS = "groups/LOAD_GROUPS";
 const LOAD_GROUP = "groups/LOAD_GROUP";
 const LOAD_EVENTS = "groups/LOAD_EVENTS";
+const ADD_GROUP = "groups/ADD_GROUP";
 
 const loadGroups = groups => ({
     type: LOAD_GROUPS,
@@ -17,6 +18,11 @@ const loadGroup = group => ({
 const loadEvents = events => ({
     type: LOAD_EVENTS,
     events
+});
+
+const addGroup = group => ({
+    type: ADD_GROUP,
+    group
 })
 
 export const getGroups = () => async dispatch => {
@@ -41,7 +47,27 @@ export const getEvents = (groupId) => async dispatch => {
         const events = await response.json();
         dispatch(loadEvents(events.Events));
     }
-}
+};
+
+export const createGroup = (payload) => async dispatch => {
+    const response = await csrfFetch(`/api/groups`, {
+        method: "POST",
+        body: JSON.stringify(payload)
+    });
+    if (response.ok) {
+        const newGroup = await response.json();
+        const imgRes = await csrfFetch(`/api/groups/${newGroup.id}/images`, {
+            method: "POST",
+            body: JSON.stringify({url: payload.url, preview: true})
+        });
+        if (imgRes.ok) {
+            const newImg = await imgRes.json();
+            newGroup.previewImage = newImg.url;
+            dispatch(loadGroup(newGroup));
+            return newGroup;
+        }
+    }
+};
 
 const initialState = {
     list: []

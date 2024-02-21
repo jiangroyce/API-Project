@@ -3,6 +3,7 @@ import GroupEventsNav from "../Navigation/GroupEventsNav";
 import { useDispatch, useSelector } from "react-redux";
 import { getEvents } from "../../store/events";
 import EventDetails from "../EventDetails/EventDetails";
+import "./EventsList.css";
 
 function EventsList() {
     const dispatch = useDispatch();
@@ -14,10 +15,12 @@ function EventsList() {
     return (
         <>
         {isLoaded && (
-            <>
+            <main>
             <GroupEventsNav itemText={"Events"}/>
-            {allEvents.list.map(event => <EventDetails key={event.id} eventId={event.id} />)}
-            </>
+            <div className="events-list">
+                {allEvents.list.map(event => <EventDetails key={event.id} eventId={event.id} />)}
+            </div>
+            </main>
         )}
          </>
 

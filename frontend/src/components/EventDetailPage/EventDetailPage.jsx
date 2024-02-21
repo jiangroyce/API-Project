@@ -24,10 +24,10 @@ function EventDetailPage () {
         <>
         {isLoaded && (
             <div className="event-details-container">
-            <nav>
+            <nav className="bread-crumb">
                 <NavLink to="/events">{"< Events"}</NavLink>
                 <h1>{event.name}</h1>
-                <h2>{event.host.firstName + " " + event.host.lastName}</h2>
+                <h2>Hosted by: {event.host.firstName + " " + event.host.lastName}</h2>
             </nav>
             <div className="event-banner">
                 <img src={event.previewImage} alt={event.name} />
@@ -37,13 +37,13 @@ function EventDetailPage () {
                         <div className="event-time">
                             <FaRegClock />
                             <div className="time-info">
-                                <p>Start {new Date(event.startDate).toISOString().split('T')[0] + "·" + new Date(event.startDate).toString().split(' ')[4]}</p>
-                                <p>End {new Date(event.endDate).toISOString().split('T')[0] + "·" + new Date(event.endDate).toString().split(' ')[4]}</p>
+                                <p>START <span className="time">{new Date(event.startDate).toISOString().split('T')[0] + " · " + new Date(event.startDate).toString().split(' ')[4]}</span></p>
+                                <p>END <span className="time"> {new Date(event.endDate).toISOString().split('T')[0] + " · " + new Date(event.endDate).toString().split(' ')[4]}</span></p>
                             </div>
                         </div>
                         <div className="event-price">
                             <FaDollarSign />
-                            <div className="price-info">{event.price}</div>
+                            <div className="price-info">{ event.price === 0 ? "FREE": `$ ${event.price}` }</div>
                         </div>
                         <div className="event-type">
                             <FaMapPin />
@@ -53,7 +53,7 @@ function EventDetailPage () {
                 </div>
             </div>
             <div className="event-description">
-                <h1>Details</h1>
+                <h2>Details</h2>
                 <p>{event.description}</p>
             </div>
         </div>

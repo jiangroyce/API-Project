@@ -3,6 +3,7 @@ import GroupEventsNav from "../Navigation/GroupEventsNav";
 import GroupDetails from "../GroupDetails";
 import { useDispatch, useSelector } from "react-redux";
 import { getGroups } from "../../store/groups";
+import "./GroupsList.css";
 
 function GroupsList() {
     const dispatch = useDispatch();

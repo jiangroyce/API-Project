@@ -1,8 +1,12 @@
+.bread-crumb > .active {
+    cursor: pointer;
+}
 .group-details-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 0 10%;
 }
 
 .group-details-container > nav {
@@ -12,4 +16,73 @@
 
 .group-info-banner {
     display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 3em;
+    border-bottom: 3px solid gray;
+}
+
+.group-info-banner > img {
+    width: 50%;
+    object-fit: cover;
+}
+
+.group-info-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.group-info {
+    padding-left: 10%;
+}
+
+.group-info > * {
+    margin: 5px;
+}
+
+.organizer-actions {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.organizer-actions > button {
+    padding: 10px 20px;
+    background-color: gray;
+    cursor: pointer;
+}
+
+.group-events-container {
+    padding-left: 20px;
+}
+
+.organizer-info {
+    font-size: small;
+    margin-bottom: 30px;
+}
+
+h1 {
+    margin: 10px 0;
+}
+
+.organizer-info > h2 {
+    margin: 5px 0;
+    font-size: medium;
+    color: gray;
+}
+
+.about-info {
+    font-size: small;
+    margin-bottom: 30px;
+}
+
+.about-info > p {
+    margin: 0;
+    padding: 0;
+    color: black;
+    font-size: medium;
+}
+
+.events-container {
+    font-size: small;
 }

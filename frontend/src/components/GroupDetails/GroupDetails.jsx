@@ -1,16 +1,11 @@
 import "./GroupDetails.css"
 
 import { useNavigate } from "react-router-dom";
-import { getEvents, getGroup } from "../../store/groups";
-import { useDispatch } from "react-redux";
 
 function GroupDetails({group}) {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
     return (
         <div className="group-details" onClick={async () => {
-            // await dispatch(getGroup(group.id));
-            // await dispatch(getEvents(group.id));
             navigate(`/groups/${group.id}`);
         }}>
             <img src={group.previewImage} />

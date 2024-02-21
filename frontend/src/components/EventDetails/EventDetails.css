@@ -1,8 +1,51 @@
 .event-details {
+    width: 60%;
     display: flex;
     flex-direction: column;
+    cursor: pointer;
+    border-bottom: 3px solid gray;
 }
 
 .event-details-banner {
     display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.event-details-banner > img {
+    width: 50%;
+    object-fit: contain;
+}
+
+.event-details-info {
+    padding-left: 1%;
+    padding-bottom: 8%;
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    justify-content: baseline;
+}
+
+.event-details-info > * {
+    margin: 3px;
+}
+
+.event-details-info > h4 {
+    color: teal;
+    font-size: medium;
+}
+
+.event-details-info > h3 {
+    font-size: large;
+}
+
+.event-details-info > h5 {
+    font-size: medium;
+    color: gray
+}
+
+.event-about > p {
+    padding: 0;
+    color: black;
+    font-size: medium;
 }

@@ -25,7 +25,7 @@ function EventDetails({eventId}){
                     <div className="event-details-info">
                         <h4>{new Date(event.startDate).toISOString().split('T')[0] + "·" + new Date(event.startDate).toString().split(' ')[4]}</h4>
                         <h3>{event.name}</h3>
-                        <h4>{event.Venue.city}, {event.Venue.state}</h4>
+                        <h5>{event.Venue.city}, {event.Venue.state}</h5>
                     </div>
                 </div>
                 <div className="event-about">

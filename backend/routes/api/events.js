@@ -4,7 +4,7 @@ const { requireAuth } = require("../../utils/auth.js");
 const { handleValidationErrors, validateEditAttendance, validateEditEvent, validateQueryParams } = require('../../utils/validation.js');
 const { _authorizationError, isOrganizer, isCoHost, isMember, isAttending } = require('../../utils/authorization.js');
 const { _userNotFound, _eventNotFound, _attendanceNotFound } = require("../../utils/errors.js");
-const { getAttendees, formatEvents, formatAttendances, removeUpdatedAt } = require('../../utils/formatting.js');
+const { getAttendees, formatEvents, formatAttendances, removeUpdatedAt, getEventImage } = require('../../utils/formatting.js');
 const { Op } = require("sequelize");
 
 const router = express.Router();
@@ -83,6 +83,7 @@ router.get("/:eventId", async (req, res) => {
     else {
         let resBody = event.dataValues;
         resBody.numAttending = getAttendees(resBody);
+        resBody.previewImage = getEventImage(resBody);
         delete resBody.Attendees;
         res.json(resBody);
     }

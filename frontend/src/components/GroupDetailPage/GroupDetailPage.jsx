@@ -6,6 +6,7 @@ import { getEvents, getGroup } from "../../store/groups";
 import { useEffect, useState } from "react";
 
 function GroupDetailPage () {
+    const sessionUser = useSelector(state => state.session.user);
     const dispatch = useDispatch();
     const { id } = useParams();
     const group = useSelector((state) => state.groups[id]);
@@ -22,14 +23,17 @@ function GroupDetailPage () {
 
     function splitEvents(events) {
         const results = {};
-        results.upcoming = events.filter(event => new Date(event.startDate) >= Date.now());
-        results.past = events.filter(event => new Date(event.endDate) < Date.now());
+        if (events)
+        {
+            results.upcoming = events.filter(event => new Date(event.startDate) >= Date.now());
+            results.past = events.filter(event => new Date(event.endDate) < Date.now());
+        }
         return setEventFilter(results);
     }
 
     return (
     <div className="group-details-container">
-    <nav><NavLink to="/groups">{"< Groups"}</NavLink></nav>
+    <nav className="bread-crumb"><NavLink to="/groups">{"< Groups"}</NavLink></nav>
         { isLoaded &&
             <>
                 <div className="group-info-banner">
@@ -38,10 +42,17 @@ function GroupDetailPage () {
                         <div className="group-info">
                             <h1>{group.name}</h1>
                             <h2>{group.city + ", " + group.state}</h2>
-                            <p>{group.Events.length} {group.Events.length === 1? "Event": "Events"} · {group.private ? "Private" : "Public"}</p>
+                            <p>{group.Events?.length} {group.Events?.length === 1? "Event": "Events"} · {group.private ? "Private" : "Public"}</p>
                             <p>Organized by: {group.Organizer?.firstName + " " + group.Organizer?.lastName}</p>
                         </div>
-                        <button onClick={() => window.alert("Feature Coming Soon")}>Join this group</button>
+                        {sessionUser?.id != group.organizerId ? <button onClick={() => window.alert("Feature Coming Soon")}>Join this group</button> : null}
+                        {sessionUser?.id == group.organizerId ?
+                            <div className="organizer-actions">
+                                <button>Create Event</button>
+                                <button>Update</button>
+                                <button>Delete</button>
+                            </div> :
+                        null}
                     </div>
                 </div>
                 <div className="group-events-container">
@@ -53,14 +64,24 @@ function GroupDetailPage () {
                         <h1>What we&apos;re about</h1>
                         <p>{group.about}</p>
                     </div>
-                    <div className="events-container">
+                    {
+                        eventFilter.upcoming?.length > 0 ?
+                        (<div className="events-container">
                         <h1>Upcoming Events {"(" + eventFilter.upcoming?.length + ")"}</h1>
                         {eventFilter.upcoming?.map((event) => <EventDetails key={event.id} eventId={event.id} />)}
-                    </div>
-                    <div className="events-container">
-                        <h1>Past Events {"(" + eventFilter.past?.length + ")"}</h1>
-                        {eventFilter.past?.map((event) => <EventDetails key={event.id} eventId={event.id} />)}
-                    </div>
+                    </div>) :
+                        null
+                    }
+                    {
+                        eventFilter.past?.length > 0 ?
+                        (
+                            <div className="events-container">
+                            <h1>Past Events {"(" + eventFilter.past?.length + ")"}</h1>
+                            {eventFilter.past?.map((event) => <EventDetails key={event.id} eventId={event.id} />)}
+                        </div>
+                        ) :
+                        null
+                    }
                 </div>
             </>
         }
