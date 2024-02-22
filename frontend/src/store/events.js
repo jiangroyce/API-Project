@@ -1,7 +1,8 @@
 import { csrfFetch } from './csrf.js';
 
 const LOAD_EVENTS = "events/LOAD_EVENTS";
-const LOAD_EVENT = "events/LOAD_EVENT";
+const GET_HOST = "events/GET_HOST";
+const ADD_EVENT = "events/ADD_EVENT";
 
 const loadEvents = events => ({
     type: LOAD_EVENTS,
@@ -9,9 +10,14 @@ const loadEvents = events => ({
 });
 
 const loadEvent = event => ({
-    type: LOAD_EVENT,
+    type: GET_HOST,
     event
 });
+
+const addEvent = event => ({
+    type: ADD_EVENT,
+    event
+})
 
 export const getEvents = () => async dispatch => {
     const response = await csrfFetch(`/api/events`);
@@ -35,6 +41,42 @@ export const getEvent = (id) => async dispatch => {
     }
 };
 
+export const createEvent = (payload) => async dispatch => {
+    const response = await csrfFetch(`/api/groups/${payload.groupId}/events`,
+    {
+        method: "POST",
+        body: JSON.stringify(payload)
+    });
+    if (response.ok) {
+        const newEvent = await response.json();
+        const imgRes = await csrfFetch(`/api/events/${newEvent.id}/images`,
+        {
+            method: "POST",
+            body: JSON.stringify({url: payload.url, preview: true})
+        });
+        if (imgRes.ok) {
+            const newImg = await imgRes.json();
+            newEvent.previewImage = newImg.url;
+            dispatch(loadEvent(newEvent));
+            return newEvent;
+        };
+    };
+};
+
+const sortList = (list) => {
+    return list.sort((eventA, eventB) => {
+        const now = new Date();
+        const dateA = new Date(eventA.startDate);
+        const dateB = new Date(eventB.startDate);
+        const d1 = Math.abs(dateA - now);
+        const d2 = Math.abs(dateB - now);
+        if (dateA < now && dateB < now) return 0;
+        else if (dateA < now) return 1;
+        else if (dateB < now) return -1
+        else return d1 - d2;
+    });
+  };
+
 const initialState = {
     list: []
 };
@@ -49,13 +91,22 @@ function eventsReducer(state = initialState, action) {
             return {
                 ...allEvents,
                 ...state,
-                list: action.events
+                list: sortList(action.events)
             }
         }
-        case LOAD_EVENT: {
-            const newState = { ...state };
+        case GET_HOST: {
             const eventId = action.event.id;
+            const newState = { ...state };
             newState[eventId] = {...newState[eventId], ...action.event};
+            return newState;
+        }
+        case ADD_EVENT: {
+            const eventId = action.event.id;
+            const newState = { ...state };
+            newState[eventId] = {...newState[eventId], ...action.event};
+            const eventList = newState.list;
+            newState.list.push(action.event);
+            newState.list = sortList(eventList);
             return newState;
         }
         default:

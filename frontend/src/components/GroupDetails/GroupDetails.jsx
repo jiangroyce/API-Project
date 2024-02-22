@@ -14,7 +14,7 @@ function GroupDetails({group}) {
                 <h2>{group.city}, {group.state}</h2>
                 <p>{group.about}</p>
                 <div className="members-type">
-                    {group.Events.length} {group.Events.length === 1? "Event": "Events"} · {group.private ? "Private" : "Public"}
+                    {group.Events?.length} {group.Events?.length === 1? "Event": "Events"} · {group.private ? "Private" : "Public"}
                 </div>
             </div>
         </div>

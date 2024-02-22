@@ -1,0 +1,97 @@
+.create-event-page {
+    display: flex;
+    flex-direction: column;
+    margin: 1em 25%;
+}
+
+.create-event-title {
+    align-self: normal;
+}
+
+.create-event-title > h1 {
+    font-size: x-large;
+}
+
+.create-event-title > h1 > span {
+    width: 80%;
+    overflow-wrap: break-word;
+    color: orangered;
+}
+
+.create-event-form {
+    padding: 0;
+    align-items: normal;
+}
+
+.create-event-form > div > label {
+    margin-top: 1em;
+    color: black;
+    font-weight: bold;
+}
+.create-event-form > div > label > * {
+    margin-top: 0.25em;
+    margin-bottom: 0.5em;
+}
+
+.event-name {
+    border-bottom: 3px solid gray;
+}
+
+.event-name > label {
+    width: 50%;
+}
+
+.event-type > label > select {
+    width: min-content;
+}
+
+.event-private > label > select {
+    width: min-content;
+}
+
+.event-price {
+    border-bottom: 3px solid gray;
+}
+
+.event-capacity > label > input {
+    width: 10%;
+    text-align: right;
+}
+
+.event-price > label > input {
+    width: 10%;
+    text-align: right;
+}
+
+.event-startdate > label > input {
+    width: fit-content;
+}
+
+.event-enddate {
+    border-bottom: 3px solid gray;
+}
+
+.event-enddate > label > input {
+    width: fit-content;
+}
+
+.event-url {
+    border-bottom: 3px solid gray;
+}
+
+.event-url > label > input {
+    width: 50%;
+}
+
+.create-event-form > button {
+    font-size: large;
+    margin-top: 1em;
+    padding: 10px 5px;
+    width: 25%;
+    background-color: red;
+    color: white;
+}
+
+.errors {
+    margin-bottom: 1em;
+}

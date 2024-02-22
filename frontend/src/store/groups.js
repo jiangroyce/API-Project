@@ -63,6 +63,16 @@ export const createGroup = (payload) => async dispatch => {
         if (imgRes.ok) {
             const newImg = await imgRes.json();
             newGroup.previewImage = newImg.url;
+            const venueRes = await csrfFetch(`/api/groups/${newGroup.id}/venues`, {
+                method: "POST",
+                body: JSON.stringify({
+                    address: newGroup.name + " base",
+                    city: newGroup.city,
+                    state: newGroup.state,
+                    lat: 0,
+                    lng: 0
+                })
+            });
             dispatch(loadGroup(newGroup));
             return newGroup;
         }
@@ -94,7 +104,7 @@ function groupsReducer(state = initialState, action) {
         }
         case LOAD_EVENTS: {
             const newState = { ...state };
-            const groupId = action.events[0].groupId;
+            const groupId = action.events[0]?.groupId;
             newState[groupId].Events = action.events;
             return newState;
         }

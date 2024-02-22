@@ -16,9 +16,9 @@ function GroupDetailPage () {
     const [isLoaded, setIsLoaded] = useState(false)
 
     useEffect(() => {
-        dispatch(getGroup(group.id))
-            .then(dispatch(getEvents(group.id)))
-            .then(splitEvents(group.Events))
+        dispatch(getGroup(id))
+            .then(dispatch(getEvents(id)))
+            .then(splitEvents(group?.Events))
             .then(setIsLoaded(true));
     }, [id, dispatch]);
 
@@ -26,7 +26,17 @@ function GroupDetailPage () {
         const results = {};
         if (events)
         {
-            results.upcoming = events.filter(event => new Date(event.startDate) >= Date.now());
+            results.upcoming = events.filter(event => new Date(event.startDate) >= Date.now()).sort((eventA, eventB) => {
+                const now = new Date();
+                const dateA = new Date(eventA.startDate);
+                const dateB = new Date(eventB.startDate);
+                const d1 = Math.abs(dateA - now);
+                const d2 = Math.abs(dateB - now);
+                if (dateA < now && dateB < now) return 0;
+                else if (dateA < now) return 1;
+                else if (dateB < now) return -1
+                else return d1 - d2;
+            });
             results.past = events.filter(event => new Date(event.endDate) < Date.now());
         }
         return setEventFilter(results);

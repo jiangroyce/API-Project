@@ -6,6 +6,7 @@ import { Outlet, createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Navigation from './components/Navigation/Navigation-bonus';
 import LandingPage from './components/LandingPage';
 import * as sessionActions from './store/session';
+import { getGroups } from './store/groups';
 import { Modal } from './context/Modal';
 import GroupsList from './components/GroupsList';
 import EventsList from './components/EventsList';
@@ -19,9 +20,10 @@ function Layout() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    dispatch(sessionActions.restoreUser()).then(() => {
-      setIsLoaded(true)
-    });
+    dispatch(sessionActions.restoreUser())
+      .then(dispatch(getGroups()))
+      // .then(dispatch(getEvents()))
+      .then(() => setIsLoaded(true));
   }, [dispatch]);
 
   return (
@@ -31,7 +33,7 @@ function Layout() {
       {isLoaded && <Outlet />}
     </>
   );
-}
+};
 
 const router = createBrowserRouter([
   {
@@ -70,7 +72,9 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+      <RouterProvider router={router} />
+  );
 }
 
 export default App;

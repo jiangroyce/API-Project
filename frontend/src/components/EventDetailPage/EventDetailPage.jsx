@@ -12,14 +12,14 @@ function EventDetailPage () {
     const dispatch = useDispatch();
     const { id } = useParams();
     const event = useSelector((state) => state.events[id]);
-    const group = useSelector((state) => state.groups[event.groupId]);
+    const group = useSelector((state) => state.groups[event?.groupId]);
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
         dispatch(getEvent(id))
-            .then(dispatch(getGroup(event.groupId)))
-            .then(setIsLoaded(true));
-    }, [id, dispatch, event.groupId]);
+        .then(dispatch(getGroup(event.groupId)))
+        .then(setIsLoaded(true))
+    }, [id, dispatch]);
 
     return (
         <>
@@ -28,7 +28,7 @@ function EventDetailPage () {
             <nav className="bread-crumb">
                 <NavLink to="/events">{"< Events"}</NavLink>
                 <h1>{event.name}</h1>
-                <h2>Hosted by: {event.host.firstName + " " + event.host.lastName}</h2>
+                <h2>Hosted by: {event.host?.firstName + " " + event.host?.lastName}</h2>
             </nav>
             <div className="event-banner">
                 <img src={event.previewImage} alt={event.name} />
@@ -51,7 +51,7 @@ function EventDetailPage () {
                             <div className="type-info">{event.type}</div>
                         </div>
                     </div>
-                    {sessionUser?.id == event.host.id ? (
+                    {sessionUser?.id == event.host?.id ? (
                         <div className="host-actions">
                             <button>Update</button>
                             <button>Delete</button>

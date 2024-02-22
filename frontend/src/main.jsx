@@ -32,8 +32,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <ModalProvider>
       <Provider store={store}>
         <App />
-        {/* <Carrot /> */}
-        {/* <Modal /> */}
       </Provider>
     </ModalProvider>
   </React.StrictMode>

@@ -17,7 +17,7 @@ const handleValidationErrors = (req, _res, next) => {
 };
 
 async function isValidDate(str) {
-    if (!str.match(/^\d\d\d\d-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01]) (00|[0-9]|1[0-9]|2[0-3]):([0-9]|[0-5][0-9]):([0-9]|[0-5][0-9])$/g))
+    if (!str.match(/^\d\d\d\d-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01]) (00|0[0-9]|1[0-9]|2[0-3]):([0-9]|[0-5][0-9]):([0-9]|[0-5][0-9])$/g))
         {
             throw new Error()
         }
@@ -136,6 +136,9 @@ const validateCreateEvent = [
     check('description')
         .exists({ checkFalsy: true })
         .withMessage("Description is required"),
+    check('description')
+        .isLength({ min: 30 })
+        .withMessage("Description must be at least 30 characters long"),
     check('startDate')
         .isLength({ min: 19 })
         .custom(async startDate => isValidDate(startDate))
