@@ -5,7 +5,6 @@ import { getEvent } from "../../store/events";
 import { useEffect, useState } from "react";
 import { FaRegClock, FaDollarSign, FaMapPin } from "react-icons/fa6";
 import GroupDetails from "../GroupDetails";
-import { getGroup } from "../../store/groups";
 import DeleteEventButton from "../DeleteEventModal/DeleteEventButton";
 
 function EventDetailPage () {

@@ -29,7 +29,7 @@ function LandingPage() {
                 <div className="function-card">
                     <img src="https://www.meetup.com/_next/image/?url=%2Fimages%2FindexPage%2Fjoin%2Fjoin_meetup.webp&w=384&q=75"></img>
                     <Link to="/events">Find an event</Link>
-                    <p>See who's hosting local events for all the things you love.</p>
+                    <p>See who&apos;s hosting local events for all the things you love.</p>
                 </div>
                 <div className="function-card">
                     <img src="https://www.meetup.com/_next/image/?url=%2Fimages%2FindexPage%2Fjoin%2Fjoin_meetup.webp&w=384&q=75"></img>
