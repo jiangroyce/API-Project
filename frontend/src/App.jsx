@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Outlet, createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { Outlet, createBrowserRouter, RouterProvider, useNavigate } from 'react-router-dom';
 // import LoginFormPage from './components/LoginFormPage';
 // import SignupFormPage from './components/SignupFormPage';
 import Navigation from './components/Navigation/Navigation-bonus';
@@ -36,9 +36,20 @@ function Layout() {
   );
 }
 
+export function ErrorPage({home}) {
+  const navigate = useNavigate();
+  return (
+    <div className='error-page' onClick={()=>navigate("/")}>
+      {home && <Layout />}
+      <h1>Oops, something went wrong. Click anywhere to return to home.</h1>
+    </div>
+  )
+}
+
 const router = createBrowserRouter([
   {
     element: <Layout />,
+    errorElement: <ErrorPage home={true}/>,
     children: [
       {
         path: '/',
@@ -50,15 +61,21 @@ const router = createBrowserRouter([
       },
       {
         path: 'groups/:id',
-        element: <GroupDetailPage />
-      },
-      {
-        path: 'groups/:id/edit',
-        element: <UpdateGroupPage />
-      },
-      {
-        path: 'groups/:id/events/new',
-        element: <CreateEventPage />
+        element: <Outlet />,
+        children: [
+          {
+            index: true,
+            element: <GroupDetailPage />
+          },
+          {
+            path: 'edit',
+            element: <UpdateGroupPage />
+          },
+          {
+            path: 'events/new',
+            element: <CreateEventPage />
+          },
+        ]
       },
       {
         path: 'groups/new',
@@ -71,6 +88,10 @@ const router = createBrowserRouter([
       {
         path: 'events/:id',
         element: <EventDetailPage />
+      },
+      {
+        path: "*",
+        element: <ErrorPage home={false} />
       }
     ]
   }

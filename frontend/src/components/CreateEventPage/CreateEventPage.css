@@ -15,7 +15,7 @@
 .create-event-title > h1 > span {
     width: 80%;
     overflow-wrap: break-word;
-    color: orangered;
+    color: #FA6666;
 }
 
 .create-event-form {

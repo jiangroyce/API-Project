@@ -7,7 +7,7 @@
   flex-direction: column;
   background-color: lightgray;
   border: 5px solid black;
-  color: orangered;
+  color: #FA6666;
 }
 
 .hidden {
@@ -38,7 +38,7 @@
   margin: 1em 0;
 }
 .user-actions > li > * {
-  background-color: orangered;
+  background-color: #FA6666;
   padding: 0.5em 1em;
   border: solid black 1px;
   border-radius: 3em;
@@ -47,7 +47,7 @@
 }
 
 .profile-dropdown > li > * {
-  background-color: orangered;
+  background-color: #FA6666;
   padding: 0.5em 1em;
   border: solid black 1px;
   border-radius: 3em;
@@ -79,7 +79,7 @@ ul {
   font-size: 50px;
   font-weight: bold;
   font-family: Arial, Helvetica, sans-serif;
-  color:orangered;
+  color:#FA6666;
   text-decoration: none;
 }
 
@@ -101,7 +101,7 @@ ul {
 }
 
 #not-logged-in > li:hover {
-  color: orangered;
+  color: #FA6666;
   font-weight: bolder;
   cursor: pointer;
 }
@@ -125,7 +125,7 @@ ul {
 }
 
 #logged-in > a:hover {
-  color: orangered;
+  color: #FA6666;
   font-size: larger;
   font-weight: bolder;
   cursor: pointer;
@@ -133,7 +133,7 @@ ul {
 
 i {
   font-size: 50px;
-  color: orangered;
+  color: #FA6666;
 }
 
 #profile-button {

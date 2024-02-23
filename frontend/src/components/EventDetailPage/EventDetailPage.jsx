@@ -18,13 +18,13 @@ function EventDetailPage () {
 
     useEffect(() => {
         dispatch(getEvent(id))
-        .then(dispatch(getGroup(event.groupId)))
+        // .then(dispatch(getGroup(event.groupId)))
         .then(setIsLoaded(true))
-    }, [id, dispatch, event.groupId]);
+    }, [id, dispatch]);
 
     return (
         <>
-        {isLoaded && (
+        {isLoaded && group && event && (
             <div className="event-details-container">
             <nav className="bread-crumb">
                 <NavLink to="/events">{"< Events"}</NavLink>

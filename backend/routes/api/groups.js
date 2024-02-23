@@ -20,6 +20,9 @@ router.get("/", async (req, res) => {
             },
             {
                 association: "Events"
+            },
+            {
+                association: "Venues"
             }
         ]
     });

@@ -4,12 +4,14 @@
     justify-content: space-between;
     border-bottom: 3px solid gray;
     cursor: pointer;
+    width: 60%
 }
 
 .group-details > img {
     width: 375px;
     height: 150px;
-    object-fit: contain;
+    object-fit: cover;
+    object-position: 50% 35%;
 }
 
 .group-info {
@@ -20,11 +22,15 @@
 
 .group-info > h1 {
     font-size: larger;
+    max-height: 22%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .group-info > h2 {
     font-size: large;
     color: gray;
+    max-height: 19%;
 }
 
 .group-info > p {
@@ -33,6 +39,7 @@
     font-size: medium;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-height: 19%;
 }
 
 .members-type {

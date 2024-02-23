@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams} from "react-router-dom";
 import "./CreateEventPage.css";
 import { createEvent } from "../../store/events";
+import { ErrorPage } from "../../App";
 
 function CreateEventPage() {
     const dispatch = useDispatch();
@@ -57,7 +58,7 @@ function CreateEventPage() {
         }
     };
 
-    return (
+    if (group) return (
         <div className="create-event-page">
             <div className="create-event-title">
                 <h1>Create an event for <span>{group?.name}</span></h1>
@@ -156,6 +157,8 @@ function CreateEventPage() {
             </form>
         </div>
     )
+
+    else return <ErrorPage home={false} />
 }
 
 export default CreateEventPage;

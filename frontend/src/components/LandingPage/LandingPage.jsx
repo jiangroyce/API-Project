@@ -24,17 +24,17 @@ function LandingPage() {
                 <div className="function-card">
                     <img src="https://www.meetup.com/_next/image/?url=%2Fimages%2FindexPage%2Fjoin%2Fjoin_meetup.webp&w=384&q=75"></img>
                     <Link to="/groups">See all groups</Link>
-                    <p>aoafsdfoiasdu ofiasduofiausd</p>
+                    <p>Discover local groups and connect with locals over shared interests.</p>
                 </div>
                 <div className="function-card">
                     <img src="https://www.meetup.com/_next/image/?url=%2Fimages%2FindexPage%2Fjoin%2Fjoin_meetup.webp&w=384&q=75"></img>
                     <Link to="/events">Find an event</Link>
-                    <p>aoafsdfoiasdu ofiasduofiausd</p>
+                    <p>See who's hosting local events for all the things you love.</p>
                 </div>
                 <div className="function-card">
                     <img src="https://www.meetup.com/_next/image/?url=%2Fimages%2FindexPage%2Fjoin%2Fjoin_meetup.webp&w=384&q=75"></img>
                     {sessionUser ? <Link to="/groups/new">Start a new group</Link> : <p id="new-group">Start a new group</p>}
-                    <p>aoafsdfoiasdu ofiasduofiausd</p>
+                    <p>Create your own Meetup group, and draw from a community of millions.</p>
                 </div>
             </div>
             {!sessionUser && <div id='sign-up'><SignUpButton itemText={"Join Meetup"}/></div>}

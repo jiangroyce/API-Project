@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { updateGroup } from "../../store/groups";
 
 function UpdateGroupPage() {
@@ -8,18 +8,18 @@ function UpdateGroupPage() {
     const navigate = useNavigate();
     const { id } = useParams();
     const group = useSelector(state => state.groups[id]);
-    console.log(group);
     const [errors, setErrors] = useState({});
-    const [location, setLocation] = useState(`${group.city}, ${group.state}`);
+    const [location, setLocation] = useState(`${group?.city}, ${group?.state}`);
     const updateLocation = (e) => setLocation(e.target.value);
-    const [name, setName] = useState(group.name);
+    const [name, setName] = useState(group?.name);
     const updateName = (e) => setName(e.target.value);
-    const [description, setDescription] = useState(group.about);
+    const [description, setDescription] = useState(group?.about);
     const updateDescription = (e) => setDescription(e.target.value);
-    const [type, setType] = useState(group.type);
+    const [type, setType] = useState(group?.type);
     const updateType = (e) => setType(e.target.value);
-    const [isPrivate, setPrivate] = useState(group.private);
+    const [isPrivate, setPrivate] = useState(group?.private);
     const updatePrivate = (e) => setPrivate(e.target.value);
+    if (!group) return <Navigate to="/" />;
 
     const handleSubmit = async (e) => {
         e.preventDefault();

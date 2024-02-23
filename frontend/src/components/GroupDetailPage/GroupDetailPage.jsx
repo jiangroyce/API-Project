@@ -10,17 +10,16 @@ function GroupDetailPage () {
     const sessionUser = useSelector(state => state.session.user);
     const dispatch = useDispatch();
     const { id } = useParams();
-    const group = useSelector((state) => state.groups[id]);
     const navigate = useNavigate();
-
     const [eventFilter, setEventFilter] = useState({});
     const [isLoaded, setIsLoaded] = useState(false)
+    const group = useSelector((state) => state.groups[id]);
 
     useEffect(() => {
         dispatch(getGroup(id))
-            .then(dispatch(getEvents(id)))
-            .then(splitEvents(group?.Events))
-            .then(setIsLoaded(true));
+        .then(dispatch(getEvents(id)))
+        .then(splitEvents(group?.Events))
+        .then(setIsLoaded(true));
     }, [id, dispatch, group?.Events]);
 
     function splitEvents(events) {
@@ -46,7 +45,7 @@ function GroupDetailPage () {
     return (
     <div className="group-details-container">
     <nav className="bread-crumb"><NavLink to="/groups">{"< Groups"}</NavLink></nav>
-        { isLoaded &&
+        { isLoaded && group &&
             <>
                 <div className="group-info-banner">
                     <img src={group.previewImage} alt={group.name} />

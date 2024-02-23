@@ -17,12 +17,13 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    const events = ["Pokedex Giveaway", "Weekend Battle Tournament", "Gym Trainer Exchange", "Nurse Joy Meet and Greet", "Secret Meeting"];
+    const events = ["Pokedex Giveaway", "Weekend Battle Tournament", "Gym Trainer Exchange", "Caterpie catch-a-thon", "Nurse Joy Meet and Greet", "Secret Meeting"];
     const event1 = await Event.findOne({where: {name: events[0]}});
     const event2 = await Event.findOne({where: {name: events[1]}});
     const event3 = await Event.findOne({where: {name: events[2]}});
     const event4 = await Event.findOne({where: {name: events[3]}});
     const event5 = await Event.findOne({where: {name: events[4]}});
+    const event6 = await Event.findOne({where: {name: events[5]}});
     await event1.createEventImage({
       url: "https://archives.bulbagarden.net/media/upload/thumb/6/61/DP_Pok%C3%A9dex.png/160px-DP_Pok%C3%A9dex.png",
       preview: true
@@ -36,11 +37,15 @@ module.exports = {
       preview: true
     });
     await event4.createEventImage({
-      url: "https://static1.thegamerimages.com/wordpress/wp-content/uploads/2021/01/efa319ad51b88e1ab12e50883cb43055.png",
+      url: "https://media.thenerdstash.com/wp-content/uploads/2022/08/pokemon-go-how-to-get-a-shiny-caterpie.jpg",
       preview: true
     });
     await event5.createEventImage({
-      url: "https://static.wikia.nocookie.net/kidsnextdoorfanfiction/images/c/c9/Giovanni.jpg/revision/latest?cb=20150204034343",
+      url: "https://static1.thegamerimages.com/wordpress/wp-content/uploads/2021/01/efa319ad51b88e1ab12e50883cb43055.png",
+      preview: true
+    });
+    await event6.createEventImage({
+      url: "https://staticg.sportskeeda.com/editor/2022/03/a9df7-16484763066932-1920.jpg",
       preview: true
     });
   },

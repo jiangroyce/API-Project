@@ -24,7 +24,7 @@ module.exports = {
     const group4 = await Group.findOne({where: {name: groups[3]}});
     const group5 = await Group.findOne({where: {name: groups[4]}});
     await group1.createGroupImage({
-      url: "https://pbs.twimg.com/media/CW2vaPMWsAACKK6.jpg",
+      url: "https://xf-assets.pokecharms.com/data/attachment-files/2017/02/456066_all_male_pokemon_trainers.png",
       preview: true
     });
     await group2.createGroupImage({

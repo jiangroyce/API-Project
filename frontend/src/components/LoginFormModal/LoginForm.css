@@ -44,14 +44,14 @@ label {
 }
 
 .login-modal > form > button {
-    background-color: orangered;
+    background-color: #FA6666;
     color: white;
     padding: 0.5em 1em;
     font-size: large;
 }
 
 .login-modal > button {
-    background-color: orangered;
+    background-color: #FA6666;
     color: white;
     padding: 0.5em 1em;
     font-size: large;
