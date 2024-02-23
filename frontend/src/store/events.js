@@ -65,8 +65,8 @@ export const createEvent = (payload) => async dispatch => {
             newEvent.previewImage = newImg.url;
             dispatch(addEvent(newEvent));
             return newEvent;
-        };
-    };
+        }
+    }
 };
 
 export const deleteEvent = (id) => async dispatch => {

@@ -21,7 +21,7 @@ function GroupDetailPage () {
             .then(dispatch(getEvents(id)))
             .then(splitEvents(group?.Events))
             .then(setIsLoaded(true));
-    }, [id, dispatch]);
+    }, [id, dispatch, group?.Events]);
 
     function splitEvents(events) {
         const results = {};

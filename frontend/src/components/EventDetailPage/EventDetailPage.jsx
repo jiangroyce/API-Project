@@ -20,7 +20,7 @@ function EventDetailPage () {
         dispatch(getEvent(id))
         .then(dispatch(getGroup(event.groupId)))
         .then(setIsLoaded(true))
-    }, [id, dispatch]);
+    }, [id, dispatch, event.groupId]);
 
     return (
         <>

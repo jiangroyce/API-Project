@@ -74,8 +74,10 @@ export const createGroup = (payload) => async dispatch => {
                     lng: 0
                 })
             });
-            dispatch(loadGroup({...newGroup, Events: []}));
-            return newGroup;
+            if (venueRes.ok) {
+                dispatch(loadGroup({...newGroup, Events: []}));
+                return newGroup;
+            }
         }
     }
 };

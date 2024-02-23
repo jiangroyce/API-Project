@@ -54,7 +54,7 @@ function CreateEventPage() {
             const regex = /\.(jpg|png|jpeg)$/;
             const res = await e.json();
             setErrors({...res.errors, url: regex.test(url) ? null : "Image URL must end in .png, .jpg, or .jpeg", private: isPrivate === "" ? "Visibility is required" : null})
-        };
+        }
     };
 
     return (

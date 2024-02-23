@@ -36,6 +36,6 @@ function EventDetails({eventId}){
             }
         </div>
     )
-};
+}
 
 export default EventDetails;

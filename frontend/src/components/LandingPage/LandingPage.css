@@ -4,10 +4,15 @@ main {
     justify-content: center;
     align-items: center;
 }
+
 .landing-banner {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.intro-picture > img {
+    border: none;
 }
 
 .intro-banner {
@@ -38,6 +43,10 @@ main {
     color: teal;
     text-decoration: none;
     font-size: large;
+}
+
+.function-card > img {
+    border: none;
 }
 
 .function-card > a:hover {
