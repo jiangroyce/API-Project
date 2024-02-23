@@ -3,6 +3,7 @@ import { csrfFetch } from './csrf.js';
 const LOAD_EVENTS = "events/LOAD_EVENTS";
 const GET_HOST = "events/GET_HOST";
 const ADD_EVENT = "events/ADD_EVENT";
+const DELETE_EVENT = "events/DELETE_EVENT";
 
 const loadEvents = events => ({
     type: LOAD_EVENTS,
@@ -17,6 +18,11 @@ const loadEvent = event => ({
 const addEvent = event => ({
     type: ADD_EVENT,
     event
+});
+
+const removeEvent = id => ({
+    type: DELETE_EVENT,
+    id
 })
 
 export const getEvents = () => async dispatch => {
@@ -57,11 +63,18 @@ export const createEvent = (payload) => async dispatch => {
         if (imgRes.ok) {
             const newImg = await imgRes.json();
             newEvent.previewImage = newImg.url;
-            dispatch(loadEvent(newEvent));
+            dispatch(addEvent(newEvent));
             return newEvent;
         };
     };
 };
+
+export const deleteEvent = (id) => async dispatch => {
+    const response = await csrfFetch(`/api/events/${id}`, {
+        method: "DELETE"
+    });
+    if (response.ok) dispatch(removeEvent(id));
+}
 
 const sortList = (list) => {
     return list.sort((eventA, eventB) => {
@@ -107,6 +120,12 @@ function eventsReducer(state = initialState, action) {
             const eventList = newState.list;
             newState.list.push(action.event);
             newState.list = sortList(eventList);
+            return newState;
+        }
+        case DELETE_EVENT: {
+            const newState = {...state};
+            delete newState[action.id];
+            newState.list = sortList(newState.list.filter(event => event.id != action.id))
             return newState;
         }
         default:

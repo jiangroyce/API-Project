@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { FaRegClock, FaDollarSign, FaMapPin } from "react-icons/fa6";
 import GroupDetails from "../GroupDetails";
 import { getGroup } from "../../store/groups";
+import DeleteEventButton from "../DeleteEventModal/DeleteEventButton";
 
 function EventDetailPage () {
     const sessionUser = useSelector(state => state.session.user);
@@ -53,8 +54,8 @@ function EventDetailPage () {
                     </div>
                     {sessionUser?.id == event.host?.id ? (
                         <div className="host-actions">
-                            <button>Update</button>
-                            <button>Delete</button>
+                            <button onClick={()=> window.alert("Feature coming soon")}>Update</button>
+                            <DeleteEventButton event={event}/>
                         </div>
                     ) : null }
 

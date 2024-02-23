@@ -53,12 +53,12 @@
     width: 60%;
 }
 
-.group-info {
+.event-info-container > .group-info {
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
-.group-info > p {
+.event-info-container > .group-info > p {
     display: none;
 }
 

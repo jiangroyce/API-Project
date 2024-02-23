@@ -12,6 +12,47 @@ label {
     padding-bottom: 5px;
 }
 
-.errors {
+.login-modal > form > .errors {
     color: red;
+    margin: 0;
+    font-size: medium;
+    padding: 0;
+    margin-bottom: 0.5em;
+}
+
+.login-modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-modal > h1 {
+    font-size: x-large;
+    margin-bottom: 0;
+}
+
+.login-modal > form > label {
+    width: 100%
+}
+
+.login-modal > form > button:disabled {
+    background-color: gray;
+    color: white;
+    padding: 0.5em 1em;
+    font-size: large;
+}
+
+.login-modal > form > button {
+    background-color: orangered;
+    color: white;
+    padding: 0.5em 1em;
+    font-size: large;
+}
+
+.login-modal > button {
+    background-color: orangered;
+    color: white;
+    padding: 0.5em 1em;
+    font-size: large;
 }

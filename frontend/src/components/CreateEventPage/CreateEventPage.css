@@ -49,7 +49,7 @@
     width: min-content;
 }
 
-.event-price {
+form > .event-price {
     border-bottom: 3px solid gray;
 }
 
@@ -93,5 +93,6 @@
 }
 
 .errors {
+    color: red;
     margin-bottom: 1em;
 }

@@ -3,7 +3,7 @@ import { csrfFetch } from './csrf.js';
 const LOAD_GROUPS = "groups/LOAD_GROUPS";
 const LOAD_GROUP = "groups/LOAD_GROUP";
 const LOAD_EVENTS = "groups/LOAD_EVENTS";
-const ADD_GROUP = "groups/ADD_GROUP";
+const DELETE_GROUP = "groups/DELETE_GROUP";
 
 const loadGroups = groups => ({
     type: LOAD_GROUPS,
@@ -15,14 +15,15 @@ const loadGroup = group => ({
     group
 });
 
-const loadEvents = events => ({
+const loadEvents = ({events, id}) => ({
     type: LOAD_EVENTS,
+    id,
     events
 });
 
-const addGroup = group => ({
-    type: ADD_GROUP,
-    group
+const removeGroup = id => ({
+    type: DELETE_GROUP,
+    id
 })
 
 export const getGroups = () => async dispatch => {
@@ -45,7 +46,7 @@ export const getEvents = (groupId) => async dispatch => {
     const response = await csrfFetch(`/api/groups/${groupId}/events`);
     if (response.ok) {
         const events = await response.json();
-        dispatch(loadEvents(events.Events));
+        dispatch(loadEvents({events: events.Events, id: groupId}));
     }
 };
 
@@ -73,11 +74,32 @@ export const createGroup = (payload) => async dispatch => {
                     lng: 0
                 })
             });
-            dispatch(loadGroup(newGroup));
+            dispatch(loadGroup({...newGroup, Events: []}));
             return newGroup;
         }
     }
 };
+
+export const updateGroup = (payload) => async dispatch => {
+    const response = await csrfFetch(`/api/groups/${payload.id}`, {
+        method: "PUT",
+        body: JSON.stringify(payload)
+    });
+    if (response.ok) {
+        const newGroup = await response.json();
+        dispatch(loadGroup(newGroup));
+        return newGroup;
+    }
+};
+
+export const deleteGroup = (id) => async dispatch => {
+    const response = await csrfFetch(`/api/groups/${id}`, {
+        method: "DELETE"
+    });
+    if (response.ok) {
+        dispatch(removeGroup(id));
+    }
+}
 
 const initialState = {
     list: []
@@ -104,9 +126,16 @@ function groupsReducer(state = initialState, action) {
         }
         case LOAD_EVENTS: {
             const newState = { ...state };
-            const groupId = action.events[0]?.groupId;
-            newState[groupId].Events = action.events;
+            newState[action.id].Events = action.events;
             return newState;
+        }
+        case DELETE_GROUP: {
+            const newState = {...state};
+            delete newState[action.id];
+            return {
+                ...newState,
+                list: newState.list.filter(group => group.id != action.id)
+            };
         }
         default:
             return state

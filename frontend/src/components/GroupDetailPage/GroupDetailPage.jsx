@@ -4,6 +4,7 @@ import "./GroupDetailPage.css"
 import EventDetails from "../EventDetails/EventDetails";
 import { getEvents, getGroup } from "../../store/groups";
 import { useEffect, useState } from "react";
+import DeleteGroupButton from "../DeleteGroupModal/DeleteGroupButton";
 
 function GroupDetailPage () {
     const sessionUser = useSelector(state => state.session.user);
@@ -53,15 +54,15 @@ function GroupDetailPage () {
                         <div className="group-info">
                             <h1>{group.name}</h1>
                             <h2>{group.city + ", " + group.state}</h2>
-                            <p>{group.Events?.length} {group.Events?.length === 1? "Event": "Events"} · {group.private ? "Private" : "Public"}</p>
+                            <p>{group.Events.length} {group.Events.length === 1? "Event": "Events"} · {group.private ? "Private" : "Public"}</p>
                             <p>Organized by: {group.Organizer?.firstName + " " + group.Organizer?.lastName}</p>
                         </div>
-                        {sessionUser?.id != group.organizerId ? <button onClick={() => window.alert("Feature Coming Soon")}>Join this group</button> : null}
+                        {sessionUser?.id != group.organizerId ? <button className="join-group" onClick={() => window.alert("Feature Coming Soon")}>Join this group</button> : null}
                         {sessionUser?.id == group.organizerId ?
                             <div className="organizer-actions">
                                 <button onClick={() => navigate("events/new")}>Create Event</button>
                                 <button onClick={() => navigate("edit")}>Update</button>
-                                <button>Delete</button>
+                                <DeleteGroupButton />
                             </div> :
                         null}
                     </div>
@@ -78,10 +79,12 @@ function GroupDetailPage () {
                     {
                         eventFilter.upcoming?.length > 0 ?
                         (<div className="events-container">
-                        <h1>Upcoming Events {"(" + eventFilter.upcoming?.length + ")"}</h1>
-                        {eventFilter.upcoming?.map((event) => <EventDetails key={event.id} eventId={event.id} />)}
-                    </div>) :
-                        null
+                            <h1>Upcoming Events {"(" + eventFilter.upcoming?.length + ")"}</h1>
+                            {eventFilter.upcoming?.map((event) => <EventDetails key={event.id} eventId={event.id} />)}
+                        </div>) :
+                        (<div className="events-container">
+                            <h1>No Upcoming Events</h1>
+                        </div>)
                     }
                     {
                         eventFilter.past?.length > 0 ?

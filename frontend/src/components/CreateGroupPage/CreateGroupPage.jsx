@@ -40,7 +40,7 @@ function CreateGroupPage() {
             const regex = /\.(jpg|png|jpeg)$/;
             const res = await e.json();
             setErrors({...res.errors, url: regex.test(url) ? null : "Image URL must end in .png, .jpg, or .jpeg"})
-        };
+        }
     };
 
     return (
@@ -74,7 +74,7 @@ function CreateGroupPage() {
             </div>
             <div className="form-about">
                 <label>Describe the purpose of your group.
-                <p>People will see this when we promote your group, but you'll be able to add to it later, too. 1. What's the purpose of the group? 2. Who should join? 3. What will you do at your events?</p>
+                <p>People will see this when we promote your group, but you&apos;ll be able to add to it later, too. 1. What&apos;s the purpose of the group? 2. Who should join? 3. What will you do at your events?</p>
                 <textarea
                     placeholder="Please write at least 50 characters"
                     value={description}

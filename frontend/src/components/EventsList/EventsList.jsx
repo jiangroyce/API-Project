@@ -17,9 +17,7 @@ function EventsList() {
         {isLoaded && (
             <main>
             <GroupEventsNav itemText={"Events"}/>
-            <div className="events-list">
                 {allEvents.list.map(event => <EventDetails key={event.id} eventId={event.id} />)}
-            </div>
             </main>
         )}
          </>
