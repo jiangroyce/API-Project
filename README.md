@@ -18,10 +18,9 @@ https://royce-meetup-project.onrender.com
 [Feature List] | [Database Schema] | [User Stories] | [Wireframes]
 
 # Landing Page
-
-
+![chrome_Kn1ZIqXLrw](https://github.com/jiangroyce/API-Project/assets/145378433/962e74e6-4bf1-409a-b6d4-21504ba090a4)
 # Groups
-
+![chrome_T2arN5mZOT](https://github.com/jiangroyce/API-Project/assets/145378433/04f3c86e-ef8d-40e7-adac-29e30d0291f6)
 # Events
-
+![chrome_3RhrQy3MYp](https://github.com/jiangroyce/API-Project/assets/145378433/98592949-93f9-4c32-9432-f65916036bc7)
 # Endpoints
