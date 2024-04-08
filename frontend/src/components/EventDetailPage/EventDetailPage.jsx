@@ -44,7 +44,7 @@ function EventDetailPage () {
                         </div>
                         <div className="event-price">
                             <FaDollarSign />
-                            <div className="price-info">{ event.price === 0 ? "FREE": `$ ${event.price}` }</div>
+                            <div className="price-info">{ event.price == 0 ? "FREE": `$ ${event.price}` }</div>
                         </div>
                         <div className="event-type">
                             <FaMapPin />
